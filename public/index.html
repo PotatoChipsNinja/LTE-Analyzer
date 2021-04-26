@@ -24,7 +24,7 @@
 
       <el-container style="height: calc(100% - 60px)">
         <el-aside v-if="logged" width="250px">
-          <el-menu router>
+          <el-menu router unique-opened>
             <el-submenu index="admin" v-if="isAdmin">
               <template slot="title">
                 <i class="el-icon-s-tools"></i>
@@ -50,7 +50,7 @@
               <el-menu-item index="/query/sector">小区配置信息查询</el-menu-item>
               <el-menu-item index="/query/eNodeB">基站 eNodeB 信息查询</el-menu-item>
               <el-menu-item index="/query/kpi">小区 KPI 指标信息查询</el-menu-item>
-              <el-menu-item index="/query/prb">PRB信息统计与查询</el-menu-item>
+              <el-menu-item index="/query/prb">PRB 信息统计与查询</el-menu-item>
             </el-submenu>
             <el-submenu index="user">
               <template slot="title">
@@ -80,6 +80,8 @@
   <script type="text/javascript" src="/js/vue-router.js"></script>
   <script type="text/javascript" src="/js/axios.js"></script>
   <script type="text/javascript" src="/js/element-ui.js"></script>
+  <script type="text/javascript" src="/js/echarts.js"></script>
+  <script type="text/javascript" src="/js/FileSaver.js"></script>
   <script type="text/javascript" src="/js/components/login.js"></script>
   <script type="text/javascript" src="/js/components/welcome.js"></script>
   <script type="text/javascript" src="/js/components/user.js"></script>
