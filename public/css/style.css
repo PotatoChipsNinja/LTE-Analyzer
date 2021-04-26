@@ -1,0 +1,71 @@
+html, body, #app {
+  margin: 0;
+  height: 100%;
+}
+
+.el-header {
+  background-color: rgb(21, 101, 192);
+  color: #ffffff;
+  line-height: 60px;
+  border: none;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .8);
+}
+
+.el-aside {
+  color: #333;
+  z-index: 5;
+  box-shadow: 0 0 38px -12px rgba(0, 0, 0, 0.56);
+}
+
+.el-main {
+  padding: 20px 50px;
+  background-color: #f8f8f8;
+}
+
+.logo {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 150%;
+}
+
+.footer {
+  position: fixed;
+  width: 250px;
+  text-align: center;
+  bottom: 20px;
+}
+
+#copyright {
+  position: absolute;
+  bottom: 10px;
+  width: 250px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 90%;
+}
+
+#copyright a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.login .el-input-group__prepend {
+  text-align: center;
+  width: 3rem;
+}
+
+.timeout .el-input-group__prepend {
+  text-align: center;
+  width: 9rem;
+}
+
+.passwd .el-input-group__prepend {
+  text-align: center;
+  width: 5rem;
+}
+
+.el-divider {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LTE 网络干扰分析系统</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" type="text/css" href="/css/element-ui.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+  <div id="app">
+    <el-container style="height: 100%">
+      <el-header>
+        <el-row type="flex" class="row-bg" justify="space-between">
+          <span>
+            <a href="/" class="logo"><i class="el-icon-s-marketing" style="margin: 0 6px"></i> LTE 网络干扰分析系统</a>
+          </span>
+          <span v-if="logged">
+            <span>{{ username }}</span>
+            <el-button type="text" @click="logout" icon="el-icon-switch-button
+" style="color: unset; margin-left: 5px;"></el-button>
+          </span>
+        </el-row>
+      </el-header>
+
+      <el-container style="height: calc(100% - 60px)">
+        <el-aside v-if="logged" width="250px">
+          <el-menu router>
+            <el-submenu index="admin" v-if="isAdmin">
+              <template slot="title">
+                <i class="el-icon-s-tools"></i>
+                <span>系统管理</span>
+              </template>
+              <el-menu-item index="/admin/user">用户管理</el-menu-item>
+              <el-menu-item index="/admin/db-info">数据库信息</el-menu-item>
+              <el-menu-item index="/admin/db-setting">数据库设置</el-menu-item>
+            </el-submenu>
+            <el-submenu index="data">
+              <template slot="title">
+                <i class="el-icon-s-grid"></i>
+                <span>数据管理</span>
+              </template>
+              <el-menu-item index="/data/import">数据导入</el-menu-item>
+              <el-menu-item index="/data/export">数据导出</el-menu-item>
+            </el-submenu>
+            <el-submenu index="query">
+              <template slot="title">
+                <i class="el-icon-s-data"></i>
+                <span>业务查询</span>
+              </template>
+              <el-menu-item index="/query/sector">小区配置信息查询</el-menu-item>
+              <el-menu-item index="/query/eNodeB">基站 eNodeB 信息查询</el-menu-item>
+              <el-menu-item index="/query/kpi">小区 KPI 指标信息查询</el-menu-item>
+              <el-menu-item index="/query/prb">PRB信息统计与查询</el-menu-item>
+            </el-submenu>
+            <el-submenu index="user">
+              <template slot="title">
+                <i class="el-icon-user-solid"></i>
+                <span>账号安全</span>
+              </template>
+              <el-menu-item index="/user/passwd">修改密码</el-menu-item>
+              <el-menu-item @click="logout">退出登录</el-menu-item>
+            </el-submenu>
+          </el-menu>
+
+          <div id="copyright">
+            &copy; 2021 <a href="https://github.com/PotatoChipsNinja/TLE-Analyzer" target="_blank">TLE-Analyzer</a>
+            <br/>
+            All Rights Reserved.
+          </div>
+        </el-aside>
+
+        <el-main>
+          <router-view :username="username" :logged="logged" :is-admin="isAdmin" @login="login"></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+
+  <script type="text/javascript" src="/js/vue.js"></script>
+  <script type="text/javascript" src="/js/vue-router.js"></script>
+  <script type="text/javascript" src="/js/axios.js"></script>
+  <script type="text/javascript" src="/js/element-ui.js"></script>
+  <script type="text/javascript" src="/js/components/login.js"></script>
+  <script type="text/javascript" src="/js/components/welcome.js"></script>
+  <script type="text/javascript" src="/js/components/user.js"></script>
+  <script type="text/javascript" src="/js/components/db-info.js"></script>
+  <script type="text/javascript" src="/js/components/db-setting.js"></script>
+  <script type="text/javascript" src="/js/components/import.js"></script>
+  <script type="text/javascript" src="/js/components/export.js"></script>
+  <script type="text/javascript" src="/js/components/sector.js"></script>
+  <script type="text/javascript" src="/js/components/eNodeB.js"></script>
+  <script type="text/javascript" src="/js/components/kpi.js"></script>
+  <script type="text/javascript" src="/js/components/prb.js"></script>
+  <script type="text/javascript" src="/js/components/passwd.js"></script>
+  <script type="text/javascript" src="/js/main.js"></script>
+</body>
+</html>
