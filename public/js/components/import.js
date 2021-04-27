@@ -11,10 +11,9 @@ Vue.component('import', {
       active: 0,
       file: null,
       fileSelected: false,
-      uuid: "",
       finished: false,
       progress: 0,
-      timer: null
+      ws: null
     }
   },
   computed: {
@@ -30,22 +29,35 @@ Vue.component('import', {
       this.active++
       if (this.active === 2) {
         let type = this.file.name.substr(this.file.name.lastIndexOf('.')+1)
-        let formData = new FormData()
-        formData.append('table', this.value)
-        formData.append('type', type)
-        formData.append('file', this.file.raw)
-
-        axios.post(host + "/data/import", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
+        let that = this
+        this.ws = new WebSocket(wsHost + "/data/import?table=" + this.value + "&type=" + type)
+        this.ws.onopen = function() {
+          that.ws.send(that.file.raw)
+        }
+        this.ws.onmessage = function(e) {
+          if (e.data === "finish") {
+            that.progress = 100
+            that.finished = true
+            that.active = 3
+            that.$notify({
+              title: '导入成功',
+              message: '数据表已被成功导入数据库',
+              type: 'success'
+            })
+            that.ws.onclose = function() {}
+            that.ws.close()
+          } else {
+            that.progress = parseInt(e.data)
           }
-        }).then((res) => {
-          this.uuid = res.data.uuid
-          this.timer = setInterval(this.getProgress, 500)
-        }).catch((err) => {
-          console.log(err)
+        }
+        this.ws.onerror = function(e) {
+          console.log(e)
           that.$message.error('与服务器连接出错')
-        })
+        }
+        this.ws.onclose = function(e) {
+          console.log(e)
+          that.$message.error('与服务器连接出错')
+        }
       }
     },
     change: function(file, fileList) {
@@ -55,26 +67,6 @@ Vue.component('import', {
     clearFile: function() {
       this.file = {}
       this.fileSelected = false
-    },
-    getProgress: function() {
-      axios.get(host + "/data/progress", {
-        params: { uuid: this.uuid }
-      }).then((res) => {
-        this.finished = res.data.finished
-        this.progress = res.data.progress
-        if (this.finished) {
-          clearInterval(this.timer)
-          this.active = 3
-          this.$notify({
-            title: '导入成功',
-            message: '数据表已被成功导入数据库',
-            type: 'success'
-          })
-        }
-      }).catch((err) => {
-        console.log(err)
-        this.$message.error('与服务器连接出错')
-      })
     }
   },
   template: `

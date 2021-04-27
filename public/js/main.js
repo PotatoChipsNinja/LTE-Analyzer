@@ -1,4 +1,5 @@
 const host = "http://localhost:3000/api"
+const wsHost = "ws://localhost:3000/api"
 
 const routes = [
   { path: '/', component: Vue.component('welcome') },
