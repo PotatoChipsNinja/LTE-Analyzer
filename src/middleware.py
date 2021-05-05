@@ -9,7 +9,6 @@ class MiddleWare:
 
     def __call__(self, environ, start_response):
         request = Request(environ)
-
-        schemas[request.path].validate(dict(request.form))
+        #schemas[request.path].validate(dict(request.form))
 
         return self.app(environ, start_response)
