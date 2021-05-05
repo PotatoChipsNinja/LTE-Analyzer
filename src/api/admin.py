@@ -1,6 +1,6 @@
 from flask import Blueprint, request
-#from src.db.user import user_signin
-#from src.db.common import xxx
+from src.db.user import *
+from src.db.common import *
 import time
 
 admin = Blueprint("admin", __name__)
@@ -8,11 +8,10 @@ admin = Blueprint("admin", __name__)
 
 @admin.route("/api/admin/login", methods=["POST"])
 def login():
-    return {"success": True}
     return {
         "success":
             True if user_signin(request.form["username"],
-                                request.form["passwd"], 1) else False
+                                request.form["password"], 1) else False
     }
 
 
@@ -26,10 +25,13 @@ def passwd():
     }
 
 
-@admin.route("/api/admin/userlist", methods=["GET"])
+@admin.route("/api/admin/userList", methods=["GET"])
 def get_user_list():
-
-    return []
+    ls = user_get_list(2)
+    ret = []
+    for info in ls:
+        ret.append({"username": info[0], "time": str(info[1])[:10]})
+    return {"users": ret}
 
 
 @admin.route("/api/admin/createUser", methods=["POST"])
@@ -43,12 +45,12 @@ def create_user():
 
 @admin.route("/api/admin/removeUser", methods=["POST"])
 def remove_user():
-    return {"success": True if user_delete(request.form["username"]) else False}
+    return {"success": True if user_delete(request.form["username"], 2) else False}
 
 
 @admin.route("/api/admin/DBInfo", methods=["GET"])
 def get_db_info():
-    return db_get_inf
+    return db_get_inf()
     # return {
     #     "host": "127.0.0.1",
     #     "port": 3306,

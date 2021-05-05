@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-#from src.db.user import user_signin
+from src.db.user import user_signin, user_change_passwd
 
 user = Blueprint("user", __name__)
 

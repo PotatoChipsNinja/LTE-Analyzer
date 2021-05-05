@@ -200,4 +200,3 @@ def user_get_list(idType):
 # user_signin("shiyuhui","123",1)
 # user_signin("shiyuhui","123456",2)
 # user_change_passwd("shiyuhui","@@@@123","123456",1)
-user_get_list(1)

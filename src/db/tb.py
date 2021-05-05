@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import pymysql
 from sqlalchemy import create_engine
-from win32com.client import Dispatch
 import time
 from src.db import var
 '''
@@ -186,8 +185,6 @@ def data_export(table, type):
     else:
         print("输出时选择了错误的类型")
 
-
-table_create(6)
-trigger_create(6)
-table_create(7)
-trigger_create(7)
+# for i in range(1, 7):
+#     table_create(i)
+#     trigger_create(i)

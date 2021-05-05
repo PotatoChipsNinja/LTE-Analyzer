@@ -5,6 +5,7 @@ from werkzeug.exceptions import BadRequest
 from src.api.admin import admin
 from src.api.user import user
 from src.api.data import data
+from src.api.query import query
 
 app = Flask(__name__,
             template_folder="public",
@@ -13,7 +14,7 @@ app = Flask(__name__,
 app.register_blueprint(admin)
 app.register_blueprint(user)
 app.register_blueprint(data)
-
+app.register_blueprint(query)
 
 @app.route("/")
 def index():
