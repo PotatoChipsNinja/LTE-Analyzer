@@ -27,10 +27,10 @@ def user_signin(userName, passWord, idType):
     count = pd.read_sql_query(sql, engine)
     cnt = int(count.values)
     if cnt == 0:
-        print("用户名或密码错误，登录失败")
+        #print("用户名或密码错误，登录失败")
         return False
     else:
-        print("登录成功")
+        #print("登录成功")
         return True
 
 
@@ -73,12 +73,16 @@ def user_add(userName, passWord, idType):
             print("新增普通用户" + userName + "成功")
         # 执行结束后清空临时关系表
         cur.execute("delete from " + tb_Name + "_tmp")
+        flag = True
     except Exception as err:
         print("执行MySQL: %s 时出错: \n%s" % (sql, err))
+        flag = False
     finally:
         cur.close()
         conn.commit()
         conn.close()
+
+    return flag
 
 
 '''
@@ -112,12 +116,16 @@ def user_delete(userName, idType):
             print("删除管理员用户" + userName + "成功")
         elif idType == 2:
             print("删除普通用户" + userName + "成功")
+        flag = True
     except Exception as err:
         print("执行MySQL: %s 时出错: \n%s" % (sql, err))
+        flag = False
     finally:
         cur.close()
         conn.commit()
         conn.close()
+
+    return flag
 
 
 '''
