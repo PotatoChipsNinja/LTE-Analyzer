@@ -2,13 +2,15 @@ Vue.component('export', {
   data: function() {
     return {
       value: "",
+      type: "",
       options: [
         { value: 1, label: "tbCell" },
         { value: 2, label: "tbKPI" },
         { value: 3, label: "tbPRB" },
         { value: 4, label: "tbPRBnew" },
         { value: 5, label: "tbMROData" }
-      ]
+      ],
+      typeOptions: ["xlsx", "csv"]
     }
   },
   methods: {
@@ -17,7 +19,7 @@ Vue.component('export', {
     },
     confirm: function() {
       axios.get(host + "/data/export", {
-        params: { table: this.value }
+        params: { table: this.value, type: this.type }
       }).then((res) => {
         window.open(res.data.url)
         this.$notify.info({
@@ -40,7 +42,12 @@ Vue.component('export', {
         </el-option>
       </el-select>
 
-      <el-button :disabled="value === ''" style="margin-left: 10px; margin-top: 12px" @click="confirm" type="primary">导出</el-button>
+      <el-select v-model="type" placeholder="请选择要导出的文件格式" style="margin-top: 12px">
+        <el-option v-for="item in typeOptions" :key="item" :label="item" :value="item">
+        </el-option>
+      </el-select>
+
+      <el-button :disabled="value === '' || type === ''" style="margin-left: 10px; margin-top: 12px" @click="confirm" type="primary">导出</el-button>
     </div>
   `
 })
