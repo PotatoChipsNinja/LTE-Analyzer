@@ -33,12 +33,15 @@ def error(path):
     return render_template("index.html")
 
 
-# sockets = Sockets(app)
-# @sockets.route("/api/data/import")
-# def import_file(ws):
-#     print("yes")
-#     if request.method == "GET":
-#         print("yes")
+sockets = Sockets(app)
+
+
+@sockets.route("/api/data/import")
+def import_file(ws):
+    print("yes")
+    if request.method == "GET":
+        print("yes")
+
 
 # socketio = SocketIO(app)
 
@@ -47,4 +50,10 @@ def error(path):
 #     print(data["type"], data["table"], type(data["file"]))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="3000", debug=True)
+    from gevent.pywsgi import WSGIServer
+    from geventwebsocket.handler import WebSocketHandler
+    server = WSGIServer(('127.0.0.1', 3000),
+                        app,
+                        handler_class=WebSocketHandler)
+    print("server start ...")
+    server.serve_forever()
