@@ -18,9 +18,9 @@ def db_get_inf():
         "username": "root",
         "password": "123456",
         "interactiveTimeout": 0,  # TODO
-        "waitTimeout": 0,         # TODO
-        "partition": "",          # TODO  
-        "queryCacheSize": ""      # TODO
+        "waitTimeout": 0,  # TODO
+        "partition": "",  # TODO  
+        "queryCacheSize": ""  # TODO
     }
 
 
@@ -74,7 +74,6 @@ def db_change_cache_size(queryCacheSize):
 
 # db_change_timeout(28800,28800)
 db_change_cache_size("10M")
-
 
 # Traceback (most recent call last):
 #   File "C:\Users\sh1487561\Desktop\TLE-Analyzer\app.py", line 5, in <module>

@@ -185,6 +185,7 @@ def data_export(table, type):
     else:
         print("输出时选择了错误的类型")
 
+
 # for i in range(1, 7):
 #     table_create(i)
 #     trigger_create(i)

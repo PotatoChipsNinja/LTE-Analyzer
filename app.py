@@ -16,6 +16,7 @@ app.register_blueprint(user)
 app.register_blueprint(data)
 app.register_blueprint(query)
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -39,13 +40,11 @@ def error(path):
 #     if request.method == "GET":
 #         print("yes")
 
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
 
-
-@socketio.on("import_request", namespace="/import")
-def import_data(data):
-    print(data["type"], data["table"], type(data["file"]))
-
+# @socketio.on("import_request", namespace="/import")
+# def import_data(data):
+#     print(data["type"], data["table"], type(data["file"]))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="3000", debug=True)

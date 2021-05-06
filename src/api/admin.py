@@ -45,7 +45,9 @@ def create_user():
 
 @admin.route("/api/admin/removeUser", methods=["POST"])
 def remove_user():
-    return {"success": True if user_delete(request.form["username"], 2) else False}
+    return {
+        "success": True if user_delete(request.form["username"], 2) else False
+    }
 
 
 @admin.route("/api/admin/DBInfo", methods=["GET"])
