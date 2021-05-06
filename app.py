@@ -31,10 +31,7 @@ def index():
 def error(path):
     return render_template("index.html")
 
-
 sockets = Sockets(app)
-
-
 @sockets.route("/api/data/import")
 def import_file(ws):
     file = ws.receive()
