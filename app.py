@@ -8,6 +8,7 @@ from src.api.admin import admin
 from src.api.user import user
 from src.api.data import data
 from src.api.query import query
+from src.db.tb import *
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 
@@ -47,13 +48,14 @@ def import_file(ws):
         df = pd.read_csv(file_path)
     elif request.args.get("type") == "xlsx":
         df = pd.read_excel(file_path)
-    block_size = 5
+    block_size = 50
     data_len = df.shape[0]
     for i in range(math.ceil(data_len / block_size)):
         block = df.iloc[i * block_size:min((i + 1) * block_size, data_len)]
-        data_bulkinsert(request.args.get("table"), block)
-        ws.send(min((i + 1) * block_size, dtaa_len) * 100 // data_len)
-    ws.send("finished")
+        data_bulkinsert(int(request.args.get("table")), block)
+        print("send {} to web server".format(min((i + 1) * block_size, data_len) * 100 // data_len))
+        ws.send(str(min((i + 1) * block_size, data_len) * 100 // data_len))
+    ws.send("finish")
 
 
 if __name__ == "__main__":
