@@ -1,8 +1,8 @@
-Flask==1.1.2
-Werkzeug==1.0.1
-pandas==1.2.4
-Flask_SocketIO==4.3.2
-numpy==1.20.2
-Flask_Sockets==0.2.1
-pymysql==1.0.2
 SQLAlchemy==1.4.13
+Flask==1.1.2
+Flask_Sockets==0.2.1
+PyMySQL==1.0.2
+numpy==1.20.2
+gevent==21.1.2
+pandas==1.2.4
+gevent_websocket==0.10.1
