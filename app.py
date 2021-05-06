@@ -1,4 +1,6 @@
 import os
+import math
+import pandas as pd
 
 from flask import Flask, render_template, request
 from flask_sockets import Sockets
@@ -38,8 +40,20 @@ def import_file(ws):
     name = str(request.args.get("table")) + "." + request.args.get("type")
     if not os.path.exists("upload/"):
         os.mkdir("upload/")
-    with open("upload/" + name, "wb") as fp:
+    file_path = "upload/" + name
+    with open(file_path, "wb") as fp:
         fp.write(file)
+    if request.args.get("type") == "csv":
+        df = pd.read_csv(file_path)
+    elif request.args.get("type") == "xlsx":
+        df = pd.read_excel(file_path)
+    block_size = 5
+    data_len = df.shape[0]
+    for i in range(math.ceil(data_len / block_size)):
+        block = df.iloc[i * block_size:min((i + 1) * block_size, data_len)]
+        data_bulkinsert(request.args.get("table"), block)
+        ws.send(min((i + 1) * block_size, dtaa_len) * 100 // data_len)
+    ws.send("finished")
 
 
 if __name__ == "__main__":

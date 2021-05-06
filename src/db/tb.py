@@ -4,6 +4,7 @@ import pymysql
 from sqlalchemy import create_engine
 import time
 from src.db import var
+import os
 '''
     建表函数:table_create
     table:int           数据表，取值1-4,5,6,7分别表示 tbCell、tbKPI、tbPRB 和 tbMRO,tbPRBNEW,tbAdminUSER,tbOrdUSER;
@@ -175,13 +176,18 @@ def data_export(table, type):
 
     # 获取当前时间并格式化，目的是产生文件名唯一的文件
     nowTime = time.strftime("%Y_%m_%d-%H_%M_%S", time.localtime())
+    path = "download/"
+    if not os.path.exists(path):
+        os.mkdir(path)
 
     if type == 'xlsx':
         # 输出到excel文件
-        df.to_excel(tb_Name + "-" + nowTime + ".xlsx")
+        df.to_excel(path + tb_Name + "-" + nowTime + ".xlsx")
+        return tb_Name + "-" + nowTime + ".xlsx"
     elif type == 'csv':
         # 输出到txt文件
-        df.to_csv(tb_Name + "-" + nowTime + ".txt", sep='|', index=False)
+        df.to_csv(path + tb_Name + "-" + nowTime + ".txt", sep='|', index=False)
+        return tb_Name + "-" + nowTime + ".txt"
     else:
         print("输出时选择了错误的类型")
 
