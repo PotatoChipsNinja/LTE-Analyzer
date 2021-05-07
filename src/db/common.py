@@ -10,17 +10,42 @@ import time
 '''
 
 
+# 查询interactive_timeout值，返回str
+def query_interactiveTimeout():
+    sql = "show global variables like 'interactive_timeout';"
+    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    dfData = pd.read_sql_query(sql, engine)
+    return str(dfData.iloc[0][1])
+
+
+# 查询wait_timeout值，返回str
+def query_waitTimeout():
+    sql = "show global variables like 'wait_timeout';"
+    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    dfData = pd.read_sql_query(sql, engine)
+    return str(dfData.iloc[0][1])
+
+
 def db_get_inf():
     return {
-        "host": "127.0.0.1",
-        "port": 3306,
-        "db": "ltdb",
-        "username": "root",
-        "password": "123456",
-        "interactiveTimeout": 0,  # TODO
-        "waitTimeout": 0,  # TODO
-        "partition": "",  # TODO  
-        "queryCacheSize": ""  # TODO
+        "host":
+            "127.0.0.1",
+        "port":
+            3306,
+        "db":
+            "ltdb",
+        "username":
+            "root",
+        "password":
+            "123456",
+        "interactiveTimeout":
+            query_interactiveTimeout(),
+        "waitTimeout":
+            query_waitTimeout(),
+        "partition":
+            "",  # TODO  
+        "queryCacheSize":
+            "The current version of MySQL does not have query cache size",
     }
 
 
@@ -70,30 +95,3 @@ def db_change_cache_size(queryCacheSize):
     # conn.commit()
     # conn.close()
     return True
-
-
-# db_change_timeout(28800,28800)
-db_change_cache_size("10M")
-
-# Traceback (most recent call last):
-#   File "C:\Users\sh1487561\Desktop\TLE-Analyzer\app.py", line 5, in <module>
-#     from src.api.admin import admin
-#   File "C:\Users\sh1487561\Desktop\TLE-Analyzer\src\api\admin.py", line 3, in <module>
-#     from src.db.common import *
-#   File "C:\Users\sh1487561\Desktop\TLE-Analyzer\src\db\common.py", line 77, in <module>
-#     db_change_cache_size("10M")
-#   File "C:\Users\sh1487561\Desktop\TLE-Analyzer\src\db\common.py", line 68, in db_change_cache_size
-#     conn.query('SET GLOBAL have_query_cache="YES"')
-#   File "C:\Python39\lib\site-packages\pymysql\connections.py", line 548, in query
-#     self._affected_rows = self._read_query_result(unbuffered=unbuffered)
-#   File "C:\Python39\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
-#     result.read()
-#   File "C:\Python39\lib\site-packages\pymysql\connections.py", line 1156, in read
-#     first_packet = self.connection._read_packet()
-#   File "C:\Python39\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
-#     packet.raise_for_error()
-#   File "C:\Python39\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
-#     err.raise_mysql_exception(self._data)
-#   File "C:\Python39\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
-#     raise errorclass(errno, errval)
-# pymysql.err.OperationalError: (1238, "Variable 'have_query_cache' is a read only variable")
