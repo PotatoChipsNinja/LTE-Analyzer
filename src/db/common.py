@@ -33,7 +33,7 @@ def db_get_inf():
         "port":
             3306,
         "db":
-            "ltdb",
+            "ltedb",
         "username":
             "root",
         "password":
