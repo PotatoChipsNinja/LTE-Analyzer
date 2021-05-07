@@ -38,8 +38,8 @@ def get_user_list():
 def create_user():
     return {
         "success":
-            True if user_add(request.form["username"], request.form["passwd"],
-                             1) else False
+            True if user_add(request.form["username"], request.form["password"],
+                             2) else False
     }
 
 
