@@ -166,9 +166,10 @@ def user_change_passwd(userName, oldPsaawd, newPasswd, idType):
             cur.close()
             conn.commit()
             conn.close()
+        return True
     else:
         print("用户名或密码错误，修改密码失败")
-        return
+        return False
 
 
 '''

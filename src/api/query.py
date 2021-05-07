@@ -62,5 +62,5 @@ def prb():
 def candidate():
     type = request.args.get("key")
     ls = select_BasicData_From_tb(int(type))
-    ret = [x[0] for x in ls]
+    ret = list(set([x[0] for x in ls]))
     return {"candidate": ret}

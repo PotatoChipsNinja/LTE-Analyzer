@@ -9,7 +9,7 @@ def login():
     return {
         "success":
             True if user_signin(request.form["username"],
-                                request.form["passwd"], 2) else False
+                                request.form["password"], 2) else False
     }
 
 

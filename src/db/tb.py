@@ -5,6 +5,22 @@ from sqlalchemy import create_engine
 import time
 from src.db import var
 import os
+
+def change_database_sqlmode():
+    # 初始化数据库连接，使用pymysql模块
+    # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
+    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    sql = "select @@global.sql_mode;"
+    dfData = pd.read_sql_query(sql, engine)
+    sql_mode = str(dfData.iloc[0][0])
+    sql_mode = sql_mode.replace('ONLY_FULL_GROUP_BY,', '')
+    # 连接数据库
+    conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='ltedb', port=3306, charset='utf8')
+    # 使用cursor()方法创建光标
+    cur = conn.cursor()
+    sql = "set @@global.sql_mode ='"+sql_mode+"';"
+    cur.execute(sql)
+
 '''
     建表函数:table_create
     table:int           数据表，取值1-4,5,6,7分别表示 tbCell、tbKPI、tbPRB 和 tbMRO,tbPRBNEW,tbAdminUSER,tbOrdUSER;
@@ -154,6 +170,43 @@ def data_bulkinsert(table, df):
         cur.close()
         conn.commit()
         conn.close()
+        # 若为建tbPRB，则需要同时建表tbPRBNEW
+        if table == 2:
+            print("若为建tbPRB，则需要同时建表tbPRBNEW")
+            data_bulkinsert_prbnew()
+
+def data_bulkinsert_prbnew():
+    change_database_sqlmode()
+    # table为5，索引为4
+    table = 4
+    # 表名
+    tb_Name = var.table_Name[table]
+
+    # 连接数据库
+    conn = pymysql.connect(host='localhost',
+                           user='root',
+                           passwd='123456',
+                           db='ltedb',
+                           port=3306,
+                           charset='utf8')
+    # 使用cursor()方法创建光标
+    cur = conn.cursor()
+
+    # sql语句
+    sql_ins = var.sql_insert[table]
+
+    try:
+        cur.execute(sql_ins)
+        print("执行MySQL插入语句成功")
+        # 执行结束后清空临时关系表
+        cur.execute("delete from " + tb_Name + "_tmp")
+    except Exception as err:
+        print("执行MySQL: %s 时出错: \n%s" % (sql_ins, err))
+    finally:
+        cur.close()
+        conn.commit()
+        conn.close()
+
 
 
 '''
@@ -203,3 +256,4 @@ def data_export(table, type):
 # filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
 # df = pd.read_excel(filePath, sheet_name=0)
 # data_bulkinsert(2, df)
+# data_bulkinsert_prbnew()
