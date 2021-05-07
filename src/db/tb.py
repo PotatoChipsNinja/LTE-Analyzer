@@ -119,6 +119,11 @@ def data_bulkinsert(table, df):
     tb_Name = var.table_Name[table]
     # 将导入的nan转换为None,nan不能再MySQL中使用
     df = df.where(df.notnull(), None)
+
+    # 特判转换为标准datetime格式
+    if table == 1 or table == 2:
+        df['起始时间'] = pd.to_datetime(df['起始时间'])
+
     # 连接数据库
     conn = pymysql.connect(host='localhost',
                            user='root',
@@ -195,3 +200,6 @@ def data_export(table, type):
 # for i in range(1, 7):
 #     table_create(i)
 #     trigger_create(i)
+# filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
+# df = pd.read_excel(filePath, sheet_name=0)
+# data_bulkinsert(2, df)
