@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - 3000:3000
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ltedb
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
