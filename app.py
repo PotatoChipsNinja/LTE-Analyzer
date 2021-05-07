@@ -31,7 +31,10 @@ def index():
 def error(path):
     return render_template("index.html")
 
+
 sockets = Sockets(app)
+
+
 @sockets.route("/api/data/import")
 def import_file(ws):
     file = ws.receive()
@@ -50,7 +53,8 @@ def import_file(ws):
     for i in range(math.ceil(data_len / block_size)):
         block = df.iloc[i * block_size:min((i + 1) * block_size, data_len)]
         data_bulkinsert(int(request.args.get("table")), block)
-        print("send {} to web server".format(min((i + 1) * block_size, data_len) * 100 // data_len))
+        print("send {} to web server".format(
+            min((i + 1) * block_size, data_len) * 100 // data_len))
         ws.send(str(min((i + 1) * block_size, data_len) * 100 // data_len))
     ws.send("finish")
 

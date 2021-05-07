@@ -8,48 +8,34 @@ query = Blueprint("query", __name__)
 def sector():
     if request.args.get("sectorID") is not None:
         ret = {}
-        d = select_SectorAllo_From_tbCell_SectorId(
-                    request.args.get("sectorID"))
+        d = select_SectorAllo_From_tbCell_SectorId(request.args.get("sectorID"))
         for key, value in d.items():
             ret[key] = value[0]
-        return {
-            "result":
-                ret
-        }
+        return {"result": ret}
     elif request.args.get("sectorName") is not None:
         ret = {}
         d = select_SectorAllo_From_tbCell_SectorName(
-                    request.args.get("sectorName"))
+            request.args.get("sectorName"))
         for key, value in d.items():
             ret[key] = value[0]
-        return {
-            "result":
-                ret
-        }
+        return {"result": ret}
 
 
 @query.route("/api/query/eNodeB", methods=["GET"])
 def eNodeB():
     if request.args.get("eNodeBID") is not None:
         ret = {}
-        d = select_SectorAllo_From_tbCell_eNodeBId(
-                    request.args.get("eNodeBID"))
+        d = select_SectorAllo_From_tbCell_eNodeBId(request.args.get("eNodeBID"))
         for key, value in d.items():
             ret[key] = value[0]
-        return {
-            "result":
-                ret
-        }
+        return {"result": ret}
     elif request.args.get("eNodeBName") is not None:
         ret = {}
         d = select_SectorAllo_From_tbCell_eNodeBName(
-                    request.args.get("eNodeBName"))
+            request.args.get("eNodeBName"))
         for key, value in d.items():
             ret[key] = value[0]
-        return {
-            "result":
-                ret
-        }
+        return {"result": ret}
 
 
 @query.route("/api/query/kpi", methods=["GET"])
