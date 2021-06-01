@@ -426,12 +426,18 @@ sql_trigger = [
         create trigger TR_IMPORT_tbMRO -- 创建触发器TR_IMPORT_tbMRO
         before insert on tbMRO_tmp for each row
         begin
-            if not exists(select tbMRO.TimeStamp,tbMRO.ServingSector,tbMRO.InterferingSector from tbMRO 
-                      where tbMRO.TimeStamp=NEW.TimeStamp and tbMRO.ServingSector=NEW.ServingSector 
+            if exists(select tbMRO.TimeStamp,tbMRO.ServingSector,tbMRO.InterferingSector,tbMRO.LteScRSRP,tbMRO.LteNcRSRP from tbMRO where tbMRO.TimeStamp=NEW.TimeStamp and tbMRO.ServingSector=NEW.ServingSector 
                             and tbMRO.InterferingSector=NEW.InterferingSector 
                             and tbMRO.LteScRSRP=NEW.LteScRSRP and tbMRO.LteNcRSRP=NEW.LteNcRSRP) then
-               insert into tbMRO(TimeStamp,ServingSector,InterferingSector,LteScRSRP,LteNcRSRP,LteNcEarfcn,LteNcPci)
-               values(NEW.TimeStamp,NEW.ServingSector,NEW.InterferingSector,NEW.LteScRSRP,NEW.LteNcRSRP,NEW.LteNcEarfcn,NEW.LteNcPci);
+                update tbMRO set 
+                tbMRO.TimeStamp=NEW.TimeStamp,ServingSector=NEW.ServingSector,InterferingSector=NEW.InterferingSector,LteScRSRP=NEW.LteScRSRP,
+                LteNcRSRP=NEW.LteNcRSRP,LteNcEarfcn=NEW.LteNcEarfcn,LteNcPci=NEW.LteNcPci
+                where tbMRO.TimeStamp=NEW.TimeStamp and tbMRO.ServingSector=NEW.ServingSector 
+                            and tbMRO.InterferingSector=NEW.InterferingSector 
+                            and tbMRO.LteScRSRP=NEW.LteScRSRP and tbMRO.LteNcRSRP=NEW.LteNcRSRP;
+            else 
+                insert into tbMRO(TimeStamp,ServingSector,InterferingSector,LteScRSRP,LteNcRSRP,LteNcEarfcn,LteNcPci)
+                values(NEW.TimeStamp,NEW.ServingSector,NEW.InterferingSector,NEW.LteScRSRP,NEW.LteNcRSRP,NEW.LteNcEarfcn,NEW.LteNcPci);
             end if;
         end
         """, """
