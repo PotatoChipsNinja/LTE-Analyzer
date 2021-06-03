@@ -1,8 +1,8 @@
 table_Name = [
-    "tbCell", "tbKPI", "tbPRB", "tbMRO", "tbPRBNEW", "tbAdminUSER", "tbOrdUSER"
+    "tbCell", "tbKPI", "tbPRB", "tbMRO", "tbPRBNEW", "tbAdminUSER", "tbOrdUSER", "tbC2INEW", "tbC2I3"
 ]
 sql_create = [
-    """ 
+        """ 
         (   
             CITY            VARCHAR (30) NULL,
             SECTOR_ID       VARCHAR (30) PRIMARY KEY,
@@ -24,7 +24,8 @@ sql_create = [
             MECHTILT        FLOAT NULL,
             TOTLETILT       FLOAT NULL  
         );
-        """, """
+        """,
+        """
         (   
             起始时间                            DATETIME NOT NULL,
             网元或基站名称                        VARCHAR (64) NOT NULL,
@@ -69,7 +70,8 @@ sql_create = [
             eNB内切换出请求次数                           INT NULL,
             PRIMARY KEY(起始时间,网元或基站名称,小区,小区名称)   
         );      
-        """, """
+        """,
+        """
         (   
             起始时间                            DATETIME NOT NULL,
             网元或基站名称                        VARCHAR (64) NOT NULL,
@@ -177,7 +179,8 @@ sql_create = [
             第99个PRB上检测到的干扰噪声的平均值       INT NULL,            
             PRIMARY KEY(起始时间,网元或基站名称,小区描述,小区名称) 
         );      
-        """, """
+        """,
+        """
         (
             TimeStamp                           DATETIME NOT NULL,
             ServingSector                       VARCHAR (30) NOT NULL,
@@ -188,7 +191,8 @@ sql_create = [
             LteNcPci                            INT NULL,
             PRIMARY KEY(TimeStamp,ServingSector,InterferingSector,LteScRSRP,LteNcRSRP)
         );      
-        """, """
+        """,
+        """
         (   
             起始时间                            DATETIME NOT NULL,
             网元或基站名称                        VARCHAR (64) NOT NULL,
@@ -296,25 +300,45 @@ sql_create = [
             第99个PRB上检测到的干扰噪声的平均值       INT NULL,            
             PRIMARY KEY(起始时间,网元或基站名称,小区描述,小区名称) 
         );      
-        """, """
+        """,
+        """
         (
             userName    VARCHAR(256) NOT NULL,
             passWord    VARCHAR(256) NOT NULL,
             regTime     DATETIME NOT NULL,
             PRIMARY KEY(userName)
         );
-        """, """
+        """,
+        """
         (
             userName    VARCHAR(256) NOT NULL,
             passWord    VARCHAR(256) NOT NULL,
             regTime     DATETIME NOT NULL,
             PRIMARY KEY(userName)
         );
+        """,
+        """
+        (
+            ServingSector                       VARCHAR (30) NOT NULL,
+            InterferingSector                   VARCHAR (30) NOT NULL,  
+            mean                                FLOAT NULL,
+            std                                 FLOAT NULL,
+            PrbC2I9                             FLOAT NULL,
+            PrbABS6                             FLOAT NULL,
+            PRIMARY KEY(ServingSector,InterferingSector)
+        );          
+        """,
+        """
+        (
+            SectorA     VARCHAR (30) NOT NULL,
+            SectorB     VARCHAR (30) NOT NULL,  
+            SectorC     VARCHAR (30) NOT NULL, 
+            PRIMARY KEY(SectorA,SectorB,SectorC)
+        ); 
         """
 ]
 sql_trigger = [
-    """
-        create trigger TR_IMPORT_tbCell -- 创建触发器TR_IMPORT_tbCell
+        """
         before insert on tbCell_tmp for each row
         begin
             if exists(select tbCell.SECTOR_ID from tbCell where tbCell.SECTOR_ID=NEW.SECTOR_ID) then
@@ -328,8 +352,8 @@ sql_trigger = [
                 values(NEW.CITY,NEW.SECTOR_ID,NEW.SECTOR_NAME,NEW.ENODEBID,NEW.ENODEB_NAME,NEW.EARFCN,NEW.PCI,NEW.PSS,NEW.SSS,NEW.TAC,NEW.VENDOR,NEW.LONGITUDE,NEW.LATITUDE,NEW.STYLE,NEW.AZIMUTH,NEW.HEIGHT,NEW.ELECTTILT,NEW.MECHTILT,NEW.TOTLETILT); 
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbKPI -- 创建触发器TR_IMPORT_tbKPI
+        """,
+        """
         before insert on tbKPI_tmp for each row
         begin
             if exists(select tbKPI.小区 from tbKPI where tbKPI.起始时间=NEW.起始时间 and tbKPI.网元或基站名称=NEW.网元或基站名称 
@@ -369,8 +393,8 @@ sql_trigger = [
                                   NEW.通过重建回源小区的eNodeB内同频切换出执行成功次数,NEW.通过重建回源小区的eNodeB内异频切换出执行成功次数,NEW.eNB内切换出成功次数,NEW.eNB内切换出请求次数);
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbPRB -- 创建触发器TR_IMPORT_tbPRB
+        """,
+        """
         before insert on tbPRB_tmp for each row
         begin
             if exists(select tbPRB.小区描述 from tbPRB where tbPRB.起始时间=NEW.起始时间 and tbPRB.网元或基站名称=NEW.网元或基站名称 
@@ -422,8 +446,8 @@ sql_trigger = [
                 NEW.第90个PRB上检测到的干扰噪声的平均值,NEW.第91个PRB上检测到的干扰噪声的平均值,NEW.第92个PRB上检测到的干扰噪声的平均值,NEW.第93个PRB上检测到的干扰噪声的平均值,NEW.第94个PRB上检测到的干扰噪声的平均值,NEW.第95个PRB上检测到的干扰噪声的平均值,NEW.第96个PRB上检测到的干扰噪声的平均值,NEW.第97个PRB上检测到的干扰噪声的平均值,NEW.第98个PRB上检测到的干扰噪声的平均值,NEW.第99个PRB上检测到的干扰噪声的平均值);
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbMRO -- 创建触发器TR_IMPORT_tbMRO
+        """,
+        """
         before insert on tbMRO_tmp for each row
         begin
             if exists(select tbMRO.TimeStamp,tbMRO.ServingSector,tbMRO.InterferingSector,tbMRO.LteScRSRP,tbMRO.LteNcRSRP from tbMRO where tbMRO.TimeStamp=NEW.TimeStamp and tbMRO.ServingSector=NEW.ServingSector 
@@ -440,8 +464,8 @@ sql_trigger = [
                 values(NEW.TimeStamp,NEW.ServingSector,NEW.InterferingSector,NEW.LteScRSRP,NEW.LteNcRSRP,NEW.LteNcEarfcn,NEW.LteNcPci);
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbPRBNEW -- 创建触发器TR_IMPORT_tbPRBNEW
+        """,
+        """
         before insert on tbPRBNEW_tmp for each row
         begin
             if exists(select tbPRBNEW.小区描述 from tbPRBNEW where tbPRBNEW.起始时间=NEW.起始时间 and tbPRBNEW.网元或基站名称=NEW.网元或基站名称 
@@ -493,8 +517,8 @@ sql_trigger = [
                 NEW.第90个PRB上检测到的干扰噪声的平均值,NEW.第91个PRB上检测到的干扰噪声的平均值,NEW.第92个PRB上检测到的干扰噪声的平均值,NEW.第93个PRB上检测到的干扰噪声的平均值,NEW.第94个PRB上检测到的干扰噪声的平均值,NEW.第95个PRB上检测到的干扰噪声的平均值,NEW.第96个PRB上检测到的干扰噪声的平均值,NEW.第97个PRB上检测到的干扰噪声的平均值,NEW.第98个PRB上检测到的干扰噪声的平均值,NEW.第99个PRB上检测到的干扰噪声的平均值);
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbAdminUSER -- 创建触发器TR_IMPORT_tbAdminUSER
+        """,
+        """
         before insert on tbAdminUSER_tmp for each row
         begin
             if exists(select tbAdminUSER.userName from tbAdminUSER where tbAdminUSER.userName=NEW.userName) then
@@ -506,8 +530,9 @@ sql_trigger = [
                values(NEW.userName,NEW.passWord,NEW.regTime);
             end if;
         end
-        """, """
-        create trigger TR_IMPORT_tbOrdUSER -- 创建触发器TR_IMPORT_tbOrdUSER
+        """,
+        """
+        -- 创建触发器TR_IMPORT_tbOrdUSER
         before insert on tbOrdUSER_tmp for each row
         begin
             if exists(select tbOrdUSER.userName from tbOrdUSER where tbOrdUSER.userName=NEW.userName) then
@@ -519,14 +544,39 @@ sql_trigger = [
                values(NEW.userName,NEW.passWord,NEW.regTime);
             end if;
         end
+        """,
+        """
+        before insert on tbC2INEW_tmp for each row
+        begin
+            if exists(select tbC2INEW.ServingSector,tbC2INEW.InterferingSector from tbC2INEW 
+                      where tbC2INEW.ServingSector=NEW.ServingSector and tbC2INEW.InterferingSector=NEW.InterferingSector) then
+                update tbC2INEW set
+                mean=NEW.mean,std=NEW.std,PrbC2I9=NEW.PrbC2I9,PrbABS6=NEW.PrbABS6   
+                where ServingSector=NEW.ServingSector and InterferingSector=NEW.InterferingSector;
+            else
+               insert into tbC2INEW(ServingSector,InterferingSector,mean,std,PrbC2I9,PrbABS6)
+               values(NEW.ServingSector,NEW.InterferingSector,NEW.mean,NEW.std,NEW.PrbC2I9,NEW.PrbABS6);
+            end if;
+        end
+        """,
+        """
+        before insert on tbC2I3_tmp for each row
+        begin
+            if not exists(select tbC2I3.SectorA,tbC2I3.SectorB,tbC2I3.SectorC from tbC2I3 
+                          where tbC2I3.SectorA=NEW.tbC2I3.SectorA and tbC2I3.SectorB=NEW.tbC2I3.SectorB and tbC2I3.SectorC=NEW.tbC2I3.SectorC) then
+               insert into tbC2I3(SectorA,SectorB,SectorC)
+               values(NEW.SectorA,NEW.SectorB,NEW.SectorC);
+            end if;
+        end
         """
 ]
 sql_insert = [
-    """
+        """
         insert into 
         tbCell_tmp(CITY,SECTOR_ID,SECTOR_NAME,ENODEBID,ENODEB_NAME,EARFCN,PCI,PSS,SSS,TAC,VENDOR,LONGITUDE,LATITUDE,STYLE,AZIMUTH,HEIGHT,ELECTTILT,MECHTILT,TOTLETILT) 
         values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, """
+        """,
+        """
         insert into 
         tbKPI_tmp(起始时间,网元或基站名称,小区,小区名称,RRC连接建立完成次数,RRC连接请求次数,RRC建立成功率qf,
         E_RAB建立成功总次数,E_RAB建立尝试总次数,E_RAB建立成功率2,eNodeB触发的E_RAB异常释放总次数,小区切换出E_RAB异常释放总次数,
@@ -540,7 +590,8 @@ sql_insert = [
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, """
+        """,
+        """
         insert into
         tbPRB_tmp(起始时间,网元或基站名称,小区描述,小区名称,
         第0个PRB上检测到的干扰噪声的平均值,第1个PRB上检测到的干扰噪声的平均值,第2个PRB上检测到的干扰噪声的平均值,第3个PRB上检测到的干扰噪声的平均值,第4个PRB上检测到的干扰噪声的平均值,第5个PRB上检测到的干扰噪声的平均值,第6个PRB上检测到的干扰噪声的平均值,第7个PRB上检测到的干扰噪声的平均值,第8个PRB上检测到的干扰噪声的平均值,第9个PRB上检测到的干扰噪声的平均值,
@@ -559,11 +610,13 @@ sql_insert = [
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, """
+        """,
+        """
         insert into 
         tbMRO_tmp(TimeStamp,ServingSector,InterferingSector,LteScRSRP,LteNcRSRP,LteNcEarfcn,LteNcPci)
         values(%s,%s,%s,%s,%s,%s,%s)
-        """, """
+        """,
+        """
         insert into 
         tbPRBNEW_tmp(起始时间,网元或基站名称,小区描述,小区名称,
         第0个PRB上检测到的干扰噪声的平均值,第1个PRB上检测到的干扰噪声的平均值,第2个PRB上检测到的干扰噪声的平均值,第3个PRB上检测到的干扰噪声的平均值,第4个PRB上检测到的干扰噪声的平均值,第5个PRB上检测到的干扰噪声的平均值,第6个PRB上检测到的干扰噪声的平均值,第7个PRB上检测到的干扰噪声的平均值,第8个PRB上检测到的干扰噪声的平均值,第9个PRB上检测到的干扰噪声的平均值,
@@ -588,5 +641,8 @@ sql_insert = [
         AVG(第80个PRB上检测到的干扰噪声的平均值),AVG(第81个PRB上检测到的干扰噪声的平均值),AVG(第82个PRB上检测到的干扰噪声的平均值),AVG(第83个PRB上检测到的干扰噪声的平均值),AVG(第84个PRB上检测到的干扰噪声的平均值),AVG(第85个PRB上检测到的干扰噪声的平均值),AVG(第86个PRB上检测到的干扰噪声的平均值),AVG(第87个PRB上检测到的干扰噪声的平均值),AVG(第88个PRB上检测到的干扰噪声的平均值),AVG(第89个PRB上检测到的干扰噪声的平均值),
         AVG(第90个PRB上检测到的干扰噪声的平均值),AVG(第91个PRB上检测到的干扰噪声的平均值),AVG(第92个PRB上检测到的干扰噪声的平均值),AVG(第93个PRB上检测到的干扰噪声的平均值),AVG(第94个PRB上检测到的干扰噪声的平均值),AVG(第95个PRB上检测到的干扰噪声的平均值),AVG(第96个PRB上检测到的干扰噪声的平均值),AVG(第97个PRB上检测到的干扰噪声的平均值),AVG(第98个PRB上检测到的干扰噪声的平均值),AVG(第99个PRB上检测到的干扰噪声的平均值)
         from tbPRB group by DATE_FORMAT(起始时间,'%Y%m%d%H'),小区名称;
+        """,
+        """
+        insert into tbC2INEW_tmp(ServingSector,InterferingSector,mean,std,PrbC2I9,PrbABS6)
         """
 ]

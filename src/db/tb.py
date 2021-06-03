@@ -3,7 +3,7 @@ import numpy as np
 import pymysql
 from sqlalchemy import create_engine
 import time
-from src.db import var
+import var
 import os
 
 def change_database_sqlmode():
@@ -21,12 +21,11 @@ def change_database_sqlmode():
     sql = "set @@global.sql_mode ='"+sql_mode+"';"
     cur.execute(sql)
 
+
 '''
     建表函数:table_create
-    table:int           数据表，取值1-4,5,6,7分别表示 tbCell、tbKPI、tbPRB 和 tbMRO,tbPRBNEW,tbAdminUSER,tbOrdUSER;
+    table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
-
-
 def table_create(table):
     # 若为建tbPRB，则需要同时建表tbPRBNEW
     if table == 3:
@@ -66,10 +65,8 @@ def table_create(table):
 
 '''
     建触发器函数:trigger_create
-    table:int           数据表，取值1-4,5,6分别表示 tbCell、tbKPI、tbPRB 和 tbMRO,tbPRBNEW,tbUSER;
+    table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
-
-
 def trigger_create(table):
     # 若为表tbPRB建触发器，则需要同时为tbPRBNEW建触发器
     if table == 3:
@@ -90,8 +87,8 @@ def trigger_create(table):
     # 如果已存在该触发器则删除
     cur.execute("drop trigger if EXISTS TR_IMPORT_" + tb_Name)
     # sql语句
-    sql_tr = var.sql_trigger[table]
-
+    sql_tr = "create trigger TR_IMPORT_" + tb_Name + var.sql_trigger[table]
+    # print(sql_tr)
     try:
         # 执行sql语句并commit
         cur.execute(sql_tr)
@@ -107,7 +104,7 @@ def trigger_create(table):
 
 '''
     数据导入函数:data_bulkinsert
-    table:int           数据表，取值1-4分别表示 tbCell、tbKPI、tbPRB 和 tbMRO;
+    table:int           数据表，取值1-4分别表示 tbCell、tbKPI、tbPRB、tbMRO;
     df:dataframe        清洗和切片后的数据
 
 数据清洗在flask完成，代码如下！！！！！！！！！！    
@@ -126,8 +123,6 @@ fo.close()
 # 数据清洗
 df.drop(index=list(ef.index), inplace=True)
 '''
-
-
 def data_bulkinsert(table, df):
     # 索引为table
     table = table - 1
@@ -211,11 +206,9 @@ def data_bulkinsert_prbnew():
 
 '''
     数据导出函数:data_export
-    table:int           数据表，取值1-4,5分别表示 tbCell、tbKPI、tbPRB 和 tbMRO,tbPRBNEW;
+    table:int           数据表，取值1-5分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW;
     type:string         文件格式，取指为"xlsx"或"csv"
 '''
-
-
 def data_export(table, type):
     # 索引为table
     table = table - 1
@@ -250,10 +243,16 @@ def data_export(table, type):
         print("输出时选择了错误的类型")
 
 
-# for i in range(1, 7):
+# for i in range(1, 8):
 #     table_create(i)
 #     trigger_create(i)
 # filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
 # df = pd.read_excel(filePath, sheet_name=0)
-# data_bulkinsert(2, df)
+# filePath = '9. tbMROData.csv'
+# df = pd.read_csv(filePath)
+# data_bulkinsert(4, df)
 # data_bulkinsert_prbnew()
+# table_create(8)
+# trigger_create(8)
+# table_create(9)
+# trigger_create(9)
