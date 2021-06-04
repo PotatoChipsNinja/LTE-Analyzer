@@ -1,3 +1,17 @@
+import pymysql
+
+
+def pymysql_connect():
+    con = pymysql.connect(host='localhost',
+                          user='root',
+                          passwd='123456',
+                          db='ltedb',
+                          port=3306,
+                          charset='utf8')
+    return con
+
+
+engine_creation = 'mysql+pymysql://root:123456@localhost:3306/ltedb'
 table_Name = [
     "tbCell", "tbKPI", "tbPRB", "tbMRO", "tbPRBNEW", "tbAdminUSER", "tbOrdUSER", "tbC2INEW", "tbC2I3"
 ]

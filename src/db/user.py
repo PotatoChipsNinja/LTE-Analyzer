@@ -3,6 +3,9 @@ import numpy as np
 import pymysql
 from sqlalchemy import create_engine
 import time
+
+import var
+
 '''
     用户登录函数:
     userName: string 用户名
@@ -21,7 +24,7 @@ def user_signin(userName, passWord, idType):
         tb_Name = "tbOrdUSER"
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select count(userName) from " + tb_Name + " where userName = \'" + userName + "\' and passWord = \'" + passWord + "\';"
     # print(sql)
     count = pd.read_sql_query(sql, engine)
@@ -50,12 +53,7 @@ def user_add(userName, passWord, idType):
     elif idType == 2:
         tb_Name = "tbOrdUSER"
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
 
@@ -100,12 +98,7 @@ def user_delete(userName, idType):
     elif idType == 2:
         tb_Name = "tbOrdUSER"
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
     # sql语句
@@ -146,12 +139,7 @@ def user_change_passwd(userName, oldPsaawd, newPasswd, idType):
         elif idType == 2:
             tb_Name = "tbOrdUSER"
         # 连接数据库
-        conn = pymysql.connect(host='localhost',
-                               user='root',
-                               passwd='123456',
-                               db='ltedb',
-                               port=3306,
-                               charset='utf8')
+        conn = var.pymysql_connect()
         # 使用cursor()方法创建光标
         cur = conn.cursor()
         # sql语句
@@ -187,7 +175,7 @@ def user_get_list(idType):
         tb_Name = "tbOrdUSER"
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select userName,regTime from " + tb_Name + ";"
     # print(sql)
     result = pd.read_sql_query(sql, engine)
@@ -201,3 +189,4 @@ def user_get_list(idType):
 # user_signin("shiyuhui","123",1)
 # user_signin("shiyuhui","123456",2)
 # user_change_passwd("shiyuhui","@@@@123","123456",1)
+# print(user_get_list(1))

@@ -1,11 +1,12 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import var
 import time
 
 
 # tbCell返回sectorId(1)/sectorName(2)/eNodeBId(3)/eNodeBName(4)/小区名称(5)/属性列表(6)/小区名(7)：需要类型和MySQL的引擎
 def select_BasicData_From_tb(type):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     if type == 1:
         sql = "select SECTOR_ID from tbCell;"
         dfData = pd.read_sql_query(sql, engine)
@@ -36,7 +37,7 @@ def select_BasicData_From_tb(type):
 #-------------------1-------------------
 # 查询tbCell中小区信息：需要查询的sectorId以及MySQL的引擎
 def select_SectorAllo_From_tbCell_SectorId(sectorId):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select * from tbCell where SECTOR_ID = \'" + sectorId + "\';"
     dfData = pd.read_sql_query(sql, engine)
     # index = dfData.columns.tolist()
@@ -48,7 +49,7 @@ def select_SectorAllo_From_tbCell_SectorId(sectorId):
 
 # 查询tbCell中小区信息：需要查询的sectorName以及MySQL的引擎
 def select_SectorAllo_From_tbCell_SectorName(sectorName):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select * from tbCell where SECTOR_NAME = \'" + sectorName + "\';"
     dfData = pd.read_sql_query(sql, engine)
     # index = dfData.columns.tolist()
@@ -61,7 +62,7 @@ def select_SectorAllo_From_tbCell_SectorName(sectorName):
 #-------------------2-------------------
 # 查询tbCell中小区信息：需要查询的eNodeBID以及MySQL的引擎
 def select_SectorAllo_From_tbCell_eNodeBId(eNodeBId):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select * from tbCell where ENODEBID = \'" + eNodeBId + "\';"
     dfData = pd.read_sql_query(sql, engine)
     # index = dfData.columns.tolist()
@@ -73,7 +74,7 @@ def select_SectorAllo_From_tbCell_eNodeBId(eNodeBId):
 
 # 查询tbCell中小区信息：需要查询的eNodeBName以及MySQL的引擎
 def select_SectorAllo_From_tbCell_eNodeBName(eNodeBName):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select * from tbCell where ENODEB_NAME = \'" + eNodeBName + "\';"
     dfData = pd.read_sql_query(sql, engine)
     # index = dfData.columns.tolist()
@@ -87,7 +88,7 @@ def select_SectorAllo_From_tbCell_eNodeBName(eNodeBName):
 # 查询tbKPI中数据信息：需要查询的小区名称，数据，起始日期，终止日期以及MySQL的引擎
 def select_Data_From_tbKPI_SectorName(sectorName, attribute, startDate,
                                       endDate):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     startDate = "2020-07-" + str(startDate) + " 00:00:00"
     endDate = "2020-07-" + str(endDate) + " 00:00:00"
     sql = "select " + attribute + " from tbKPI where 小区名称 = \'" + sectorName + "\' and 起始时间 between \'" + startDate + "\' and \'" + endDate + "\';"
@@ -99,7 +100,7 @@ def select_Data_From_tbKPI_SectorName(sectorName, attribute, startDate,
 # 查询tbPRBnew中数据信息：需要查询的小区名称，数据，起始日期，终止日期以及MySQL的引擎
 def select_Data_From_tbPRBnew_SectorName(sectorName, attribute, startDate,
                                          endDate):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     attribute = "第" + str(attribute) + "个PRB上检测到的干扰噪声的平均值"
     startDate = "2020-07-" + startDate[0:2] + " " + startDate[3:5] + ":00:00"
     endDate = "2020-07-" + endDate[0:2] + " " + endDate[3:5] + ":00:00"
@@ -111,7 +112,7 @@ def select_Data_From_tbPRBnew_SectorName(sectorName, attribute, startDate,
 # 查询tbPRB中数据信息：需要查询的小区名称，数据，起始日期，终止日期以及MySQL的引擎
 def select_Data_From_tbPRB_SectorName(sectorName, attribute, startDate,
                                       endDate):
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     attribute = "第" + str(attribute) + "个PRB上检测到的干扰噪声的平均值"
     startDate = "2020-07-" + startDate[0:2] + " " + startDate[3:5] + ":00:00"
     endDate = "2020-07-" + endDate[0:2] + " " + endDate[3:5] + ":00:00"

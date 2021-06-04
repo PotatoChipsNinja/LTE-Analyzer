@@ -9,13 +9,13 @@ import os
 def change_database_sqlmode():
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     sql = "select @@global.sql_mode;"
     dfData = pd.read_sql_query(sql, engine)
     sql_mode = str(dfData.iloc[0][0])
     sql_mode = sql_mode.replace('ONLY_FULL_GROUP_BY,', '')
     # 连接数据库
-    conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='ltedb', port=3306, charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
     sql = "set @@global.sql_mode ='"+sql_mode+"';"
@@ -35,12 +35,7 @@ def table_create(table):
     # 表名
     tb_Name = var.table_Name[table]
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
     # 如果表已经存在，使用execute() 删除表
@@ -76,12 +71,7 @@ def trigger_create(table):
     # 表名
     tb_Name = var.table_Name[table]
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
     # 如果已存在该触发器则删除
@@ -136,12 +126,7 @@ def data_bulkinsert(table, df):
         df['起始时间'] = pd.to_datetime(df['起始时间'])
 
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
 
@@ -181,12 +166,7 @@ def data_bulkinsert_prbnew():
     tb_Name = var.table_Name[table]
 
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
 
@@ -220,7 +200,7 @@ def data_export(table, type):
 
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
 
     # 查询语句，选出employee表中的所有数据
     sql = "select * from " + tb_Name + ";"
@@ -257,5 +237,5 @@ def data_export(table, type):
 # data_bulkinsert_prbnew()
 # table_create(8)
 # trigger_create(8)
-# table_create(9)
+table_create(9)
 # trigger_create(9)

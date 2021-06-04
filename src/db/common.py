@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pymysql
 from sqlalchemy import create_engine
-import time
+import var
 '''
     获取数据库信息函数:
     无参数
@@ -13,7 +13,7 @@ import time
 # 查询interactive_timeout值，返回str
 def query_interactiveTimeout():
     sql = "show global variables like 'interactive_timeout';"
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     dfData = pd.read_sql_query(sql, engine)
     return str(dfData.iloc[0][1])
 
@@ -21,7 +21,7 @@ def query_interactiveTimeout():
 # 查询wait_timeout值，返回str
 def query_waitTimeout():
     sql = "show global variables like 'wait_timeout';"
-    engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ltedb')
+    engine = create_engine(var.engine_creation)
     dfData = pd.read_sql_query(sql, engine)
     return str(dfData.iloc[0][1])
 
@@ -59,12 +59,7 @@ def db_get_inf():
 
 def db_change_timeout(interactiveTimeout, waitTimeout):
     # 连接数据库
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           passwd='123456',
-                           db='ltedb',
-                           port=3306,
-                           charset='utf8')
+    conn = var.pymysql_connect()
     # 修改超时时间
     conn.query('SET GLOBAL interactive_timeout=' + str(interactiveTimeout))
     conn.query('SET GLOBAL wait_timeout=' + str(waitTimeout))
