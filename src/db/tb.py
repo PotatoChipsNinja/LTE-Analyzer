@@ -104,7 +104,7 @@ def trigger_create(table):
 
 '''
     数据导入函数:data_bulkinsert
-    table:int           数据表，取值1-4分别表示 tbCell、tbKPI、tbPRB、tbMRO;
+    table:int           数据表，取值1-4分别表示 tbCell、tbKPI、tbPRB、tbMRO;(取值8表示tbC2INEW)
     df:dataframe        清洗和切片后的数据
 
 数据清洗在flask完成，代码如下！！！！！！！！！！    
