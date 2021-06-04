@@ -644,5 +644,6 @@ sql_insert = [
         """,
         """
         insert into tbC2INEW_tmp(ServingSector,InterferingSector,mean,std,PrbC2I9,PrbABS6)
+         values(%s,%s,%s,%s,%s,%s)
         """
 ]

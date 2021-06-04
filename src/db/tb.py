@@ -145,6 +145,9 @@ def data_bulkinsert(table, df):
     # 使用cursor()方法创建光标
     cur = conn.cursor()
 
+    if table == 7:
+        table = 5
+
     # sql语句
     sql_ins = var.sql_insert[table]
 
