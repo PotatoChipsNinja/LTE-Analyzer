@@ -8,6 +8,7 @@ from src.api.admin import admin
 from src.api.user import user
 from src.api.data import data
 from src.api.query import query
+from src.api.advanced import advanced
 from src.db.tb import *
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
@@ -20,6 +21,7 @@ app.register_blueprint(admin)
 app.register_blueprint(user)
 app.register_blueprint(data)
 app.register_blueprint(query)
+app.register_blueprint(advanced)
 
 
 @app.route("/")

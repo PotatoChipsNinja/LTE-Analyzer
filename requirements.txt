@@ -1,8 +1,9 @@
+gevent==21.1.2
+Flask_Sockets==0.2.1
+pandas==1.2.4
 SQLAlchemy==1.4.13
 Flask==1.1.2
-Flask_Sockets==0.2.1
-PyMySQL==1.0.2
 numpy==1.20.2
-gevent==21.1.2
-pandas==1.2.4
+PyMySQL==1.0.2
 gevent_websocket==0.10.1
+scipy==1.6.3
