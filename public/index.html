@@ -52,6 +52,15 @@
               <el-menu-item index="/query/kpi">小区 KPI 指标信息查询</el-menu-item>
               <el-menu-item index="/query/prb">PRB 信息统计与查询</el-menu-item>
             </el-submenu>
+            <el-submenu index="advanced">
+              <template slot="title">
+                <i class="el-icon-s-marketing"></i>
+                <span>数据分析</span>
+              </template>
+              <el-menu-item index="/advanced/c2i">主邻小区 C2I 干扰分析</el-menu-item>
+              <el-menu-item index="/advanced/c2i3">重叠覆盖干扰小区三元组分析</el-menu-item>
+              <el-menu-item index="/advanced/louvain">网络干扰结构分析</el-menu-item>
+            </el-submenu>
             <el-submenu index="user">
               <template slot="title">
                 <i class="el-icon-user-solid"></i>
@@ -93,6 +102,9 @@
   <script type="text/javascript" src="/js/components/eNodeB.js"></script>
   <script type="text/javascript" src="/js/components/kpi.js"></script>
   <script type="text/javascript" src="/js/components/prb.js"></script>
+  <script type="text/javascript" src="/js/components/c2i.js"></script>
+  <script type="text/javascript" src="/js/components/c2i3.js"></script>
+  <script type="text/javascript" src="/js/components/louvain.js"></script>
   <script type="text/javascript" src="/js/components/passwd.js"></script>
   <script type="text/javascript" src="/js/main.js"></script>
 </body>

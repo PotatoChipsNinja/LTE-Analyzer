@@ -13,6 +13,9 @@ const routes = [
   { path: '/query/eNodeB', component: Vue.component('eNodeB') },
   { path: '/query/kpi', component: Vue.component('kpi') },
   { path: '/query/prb', component: Vue.component('prb') },
+  { path: '/advanced/c2i', component: Vue.component('c2i') },
+  { path: '/advanced/c2i3', component: Vue.component('c2i3') },
+  { path: '/advanced/louvain', component: Vue.component('louvain') },
   { path: '/user/passwd', component: Vue.component('passwd') }
 ]
 
