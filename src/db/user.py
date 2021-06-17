@@ -4,7 +4,7 @@ import pymysql
 from sqlalchemy import create_engine
 import time
 
-import var
+from src.db import var
 
 '''
     用户登录函数:用户发出注册请求时使用
@@ -181,7 +181,8 @@ def user_get_list(idType):
     # print(result.values.tolist())
     return result.values.tolist()
 
-
+if __name__ == "__main__":
+    user_add("admin", "admin", 1)
 # user_add("shiyuhui","123456",1)
 # user_add("zhangxinyang","654321",1)
 # user_signin("shiyuhui","123456",1)

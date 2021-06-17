@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine
-import var
+from src.db import var
 import time
 
 

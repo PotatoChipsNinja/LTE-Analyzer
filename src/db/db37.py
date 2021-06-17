@@ -1,8 +1,8 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from scipy.stats import norm
-import var
-import tb
+from src.db import var
+from src.db import tb
 from pandas.core.frame import DataFrame
 from collections import defaultdict
 
@@ -38,9 +38,9 @@ def select_all_from_tbC2i3():
     dfData = pd.read_sql_query(sql, engine)
     return dfData
 
-
-tb.table_create(9)
-tb.trigger_create(9)
-a = select_triplet_from_tbc2inew(0.002)
-print(a)
-tb.data_bulkinsert(9, a)
+if __name__ == "__main__":
+    tb.table_create(9)
+    tb.trigger_create(9)
+    a = select_triplet_from_tbc2inew(0.002)
+    print(a)
+    tb.data_bulkinsert(9, a)

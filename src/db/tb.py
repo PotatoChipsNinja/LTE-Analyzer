@@ -3,7 +3,7 @@ import numpy as np
 import pymysql
 from sqlalchemy import create_engine
 import time
-import var
+from src.db import var
 import os
 
 def change_database_sqlmode():
@@ -324,9 +324,9 @@ def data_export(table, type):
 
 
 if __name__ == '__main__':
-    # for i in range(1, 10):
-    #     table_create(i)
-    #     trigger_create(i)
+    for i in range(1, 10):
+        table_create(i)
+        trigger_create(i)
     # filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
     # df = pd.read_excel(filePath, sheet_name=0)
     # filePath = '9. tbMROData.csv'
@@ -342,4 +342,4 @@ if __name__ == '__main__':
     # data_bulkinsert(1, df)
     # add_index(1, "SECTOR_ID,SECTOR_NAME,ENODEBID", "tbcell_index")
     #add_index(1, "SECTOR_NAME", "SECTOR_NAME")
-    print(select_index(1))
+    # print(select_index(1))

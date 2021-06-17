@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pymysql
 from sqlalchemy import create_engine
-import var
+from src.db import var
 
 # 查询interactive_timeout值，返回str
 def query_interactiveTimeout():
