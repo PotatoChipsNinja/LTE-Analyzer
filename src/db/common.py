@@ -4,6 +4,7 @@ import pymysql
 from sqlalchemy import create_engine
 from src.db import var
 
+
 # 查询interactive_timeout值，返回str
 def query_interactiveTimeout():
     sql = "show global variables like 'interactive_timeout';"
@@ -19,9 +20,12 @@ def query_waitTimeout():
     dfData = pd.read_sql_query(sql, engine)
     return str(dfData.iloc[0][1])
 
+
 '''
     获取数据库信息函数:用于返回数据库信息 
 '''
+
+
 def db_get_inf():
     return {
         "host":

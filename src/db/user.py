@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 import time
 
 from src.db import var
-
 '''
     用户登录函数:用户发出注册请求时使用
     参数:
@@ -44,6 +43,7 @@ def user_signin(userName, passWord, idType):
     	passWord: string 密码
     	idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
 '''
+
 
 def user_add(userName, passWord, idType):
     # 根据用户类型确定用户表
@@ -180,6 +180,7 @@ def user_get_list(idType):
     result = pd.read_sql_query(sql, engine)
     # print(result.values.tolist())
     return result.values.tolist()
+
 
 if __name__ == "__main__":
     user_add("admin", "admin", 1)

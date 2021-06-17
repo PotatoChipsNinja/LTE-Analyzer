@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-
 '''
     Implements the Louvain method.
     Input: a weighted undirected graph
     Ouput: a (partition, modularity) pair where modularity is maximum
 '''
-class PyLouvain:
 
+
+class PyLouvain:
     '''
         Builds a graph from _path.
         _path: a path to a file containing "node_from node_to" edges (one per line)
     '''
+
     @classmethod
     def from_file(cls, path):
         f = open(path, 'r')
@@ -38,6 +39,7 @@ class PyLouvain:
         Builds a graph from _path.
         _path: a path to a file following the Graph Modeling Language specification
     '''
+
     @classmethod
     def from_gml_file(cls, path):
         f = open(path, 'r')
@@ -73,6 +75,7 @@ class PyLouvain:
         _nodes: a list of ints
         _edges: a list of ((int, int), weight) pairs
     '''
+
     def __init__(self, nodes, edges):
         self.nodes = nodes
         self.edges = edges
@@ -85,7 +88,7 @@ class PyLouvain:
         for e in edges:
             self.m += e[1]
             self.k_i[e[0][0]] += e[1]
-            self.k_i[e[0][1]] += e[1] # there's no self-loop initially
+            self.k_i[e[0][1]] += e[1]  # there's no self-loop initially
             # save edges by node
             if e[0][0] not in self.edges_of_node:
                 self.edges_of_node[e[0][0]] = [e]
@@ -99,10 +102,10 @@ class PyLouvain:
         self.communities = [n for n in nodes]
         self.actual_partition = []
 
-
     '''
         Applies the Louvain method.
     '''
+
     def apply_method(self):
         network = (self.nodes, self.edges)
         best_partition = [[node] for node in network[0]]
@@ -137,11 +140,12 @@ class PyLouvain:
         Computes the modularity of the current network.
         _partition: a list of lists of nodes
     '''
+
     def compute_modularity(self, partition):
         q = 0
         m2 = self.m * 2
         for i in range(len(partition)):
-            q += self.s_in[i] / m2 - (self.s_tot[i] / m2) ** 2
+            q += self.s_in[i] / m2 - (self.s_tot[i] / m2)**2
         return q
 
     '''
@@ -150,6 +154,7 @@ class PyLouvain:
         _c: an int
         _k_i_in: the sum of the weights of the links from _node to nodes in _c
     '''
+
     def compute_modularity_gain(self, node, c, k_i_in):
         return 2 * k_i_in - self.s_tot[c] * self.k_i[node] / self.m
 
@@ -157,6 +162,7 @@ class PyLouvain:
         Performs the first phase of the method.
         _network: a (nodes, edges) pair
     '''
+
     def first_phase(self, network):
         # make initial partition
         best_partition = self.make_initial_partition(network)
@@ -173,12 +179,17 @@ class PyLouvain:
                 for e in self.edges_of_node[node]:
                     if e[0][0] == e[0][1]:
                         continue
-                    if e[0][0] == node and self.communities[e[0][1]] == node_community or e[0][1] == node and self.communities[e[0][0]] == node_community:
+                    if e[0][0] == node and self.communities[
+                            e[0][1]] == node_community or e[0][
+                                1] == node and self.communities[
+                                    e[0][0]] == node_community:
                         best_shared_links += e[1]
-                self.s_in[node_community] -= 2 * (best_shared_links + self.w[node])
+                self.s_in[node_community] -= 2 * (best_shared_links +
+                                                  self.w[node])
                 self.s_tot[node_community] -= self.k_i[node]
                 self.communities[node] = -1
-                communities = {} # only consider neighbors of different communities
+                communities = {
+                }  # only consider neighbors of different communities
                 for neighbor in self.get_neighbors(node):
                     community = self.communities[neighbor]
                     if community in communities:
@@ -188,10 +199,14 @@ class PyLouvain:
                     for e in self.edges_of_node[node]:
                         if e[0][0] == e[0][1]:
                             continue
-                        if e[0][0] == node and self.communities[e[0][1]] == community or e[0][1] == node and self.communities[e[0][0]] == community:
+                        if e[0][0] == node and self.communities[
+                                e[0][1]] == community or e[0][
+                                    1] == node and self.communities[
+                                        e[0][0]] == community:
                             shared_links += e[1]
                     # compute modularity gain obtained by moving _node to the community of _neighbor
-                    gain = self.compute_modularity_gain(node, community, shared_links)
+                    gain = self.compute_modularity_gain(node, community,
+                                                        shared_links)
                     if gain > best_gain:
                         best_community = community
                         best_gain = gain
@@ -199,7 +214,8 @@ class PyLouvain:
                 # insert _node into the community maximizing the modularity gain
                 best_partition[best_community].append(node)
                 self.communities[node] = best_community
-                self.s_in[best_community] += 2 * (best_shared_links + self.w[node])
+                self.s_in[best_community] += 2 * (best_shared_links +
+                                                  self.w[node])
                 self.s_tot[best_community] += self.k_i[node]
                 if node_community != best_community:
                     improvement = 1
@@ -211,9 +227,10 @@ class PyLouvain:
         Yields the nodes adjacent to _node.
         _node: an int
     '''
+
     def get_neighbors(self, node):
         for e in self.edges_of_node[node]:
-            if e[0][0] == e[0][1]: # a node is not neighbor with itself
+            if e[0][0] == e[0][1]:  # a node is not neighbor with itself
                 continue
             if e[0][0] == node:
                 yield e[0][1]
@@ -224,12 +241,13 @@ class PyLouvain:
         Builds the initial partition from _network.
         _network: a (nodes, edges) pair
     '''
+
     def make_initial_partition(self, network):
         partition = [[node] for node in network[0]]
         self.s_in = [0 for node in network[0]]
         self.s_tot = [self.k_i[node] for node in network[0]]
         for e in network[1]:
-            if e[0][0] == e[0][1]: # only self-loops
+            if e[0][0] == e[0][1]:  # only self-loops
                 self.s_in[e[0][0]] += e[1]
                 self.s_in[e[0][1]] += e[1]
         return partition
@@ -239,6 +257,7 @@ class PyLouvain:
         _network: a (nodes, edges) pair
         _partition: a list of lists of nodes
     '''
+
     def second_phase(self, network, partition):
         nodes_ = [i for i in range(len(partition))]
         # relabelling communities
@@ -284,23 +303,26 @@ class PyLouvain:
         self.communities = [n for n in nodes_]
         return (nodes_, edges_)
 
+
 '''
     Rebuilds a graph with successive nodes' ids.
     _nodes: a dict of int
     _edges: a list of ((int, int), weight) pairs
 '''
+
+
 def in_order(nodes, edges):
-        # rebuild graph with successive identifiers
-        nodes = list(nodes.keys())
-        nodes.sort()
-        i = 0
-        nodes_ = []
-        d = {}
-        for n in nodes:
-            nodes_.append(i)
-            d[n] = i
-            i += 1
-        edges_ = []
-        for e in edges:
-            edges_.append(((d[e[0][0]], d[e[0][1]]), e[1]))
-        return (nodes_, edges_, d)
+    # rebuild graph with successive identifiers
+    nodes = list(nodes.keys())
+    nodes.sort()
+    i = 0
+    nodes_ = []
+    d = {}
+    for n in nodes:
+        nodes_.append(i)
+        d[n] = i
+        i += 1
+    edges_ = []
+    for e in edges:
+        edges_.append(((d[e[0][0]], d[e[0][1]]), e[1]))
+    return (nodes_, edges_, d)
