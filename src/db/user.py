@@ -5,12 +5,13 @@ from sqlalchemy import create_engine
 import time
 
 import var
+
 '''
-    用户登录函数:
-    userName: string 用户名
-    passWord: password 密码
-    idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
-    用户发出注册请求时使用
+    用户登录函数:用户发出注册请求时使用
+    参数:
+        userName: string 用户名
+        passWord: password 密码
+        idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
     返回值：boolean，成功返回True,不成功返回False
 '''
 
@@ -37,13 +38,12 @@ def user_signin(userName, passWord, idType):
 
 
 '''
-    新增用户函数：
+    新增用户函数:用户发出注册请求或更改密码时使用
+	参数:
     userName: string 用户名
-    passWord: string 密码
-    idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
-    用户发出注册请求或更改密码时使用
+    	passWord: string 密码
+    	idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
 '''
-
 
 def user_add(userName, passWord, idType):
     # 根据用户类型确定用户表
@@ -83,10 +83,10 @@ def user_add(userName, passWord, idType):
 
 
 '''
-    删除用户函数：
-    userName: string 用户名,确保用户名存在，用户名不存在对数据库无影响，也不报错
-    idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
-    删除用户时使用
+    删除用户函数:删除用户时使用
+    参数:
+        userName: string 用户名,确保用户名存在，用户名不存在对数据库无影响，也不报错
+        idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
 '''
 
 
@@ -121,12 +121,12 @@ def user_delete(userName, idType):
 
 
 '''
-    修改用户密码函数：
-    userName: string 用户名,确保用户名存在，用户名不存在对数据库无影响，也不报错
-    oldPsaawd: string 旧密码
-    newPasswd: string 新密码
-    idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
-    删除用户时使用
+    修改用户密码函数:修改用户密码
+    参数:
+        userName: string 用户名,确保用户名存在，用户名不存在对数据库无影响，也不报错
+        oldPsaawd: string 旧密码
+        newPasswd: string 新密码
+        idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
 '''
 
 
@@ -160,9 +160,9 @@ def user_change_passwd(userName, oldPsaawd, newPasswd, idType):
 
 
 '''
-    获取用户列表函数：
-    idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
-    获取用户列表时使用
+    获取用户列表函数:获取用户列表时使用
+    参数:
+        idType: int 身份类型 ，值为1代表"admin",2代表"ordinary"
 '''
 
 

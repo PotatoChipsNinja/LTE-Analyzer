@@ -6,7 +6,6 @@ import time
 import var
 import os
 
-
 def change_database_sqlmode():
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
@@ -19,16 +18,111 @@ def change_database_sqlmode():
     conn = var.pymysql_connect()
     # 使用cursor()方法创建光标
     cur = conn.cursor()
-    sql = "set @@global.sql_mode ='" + sql_mode + "';"
+    sql = "set @@global.sql_mode ='"+sql_mode+"';"
     cur.execute(sql)
 
+
+'''
+    动态添加索引函数:add_index
+    table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
+    index_string:string     索引包含列
+    name:string         索引名称
+'''
+def add_index(table, index_string, index_name):
+    # 索引为table
+    table = table - 1
+    # 表名
+    tb_Name = var.table_Name[table]
+    # 连接数据库
+    conn = var.pymysql_connect()
+    # 使用cursor()方法创建光标
+    cur = conn.cursor()
+    # sql语句
+    sql = "ALTER TABLE " + tb_Name + " ADD INDEX " + index_name + "(" + index_string + ")"
+    try:
+        # 执行sql语句并commit
+        cur.execute(sql)
+        conn.commit()
+        print("索引" + index_name + "建立成功")
+    except Exception as err:
+        # 出错时回滚（Rollback in case there is any error）
+        print("索引" + index_name + "建立时出错 {}".format(str(err)))
+        conn.rollback()
+    # 断开连接
+    conn.close()
+
+'''
+    动态删除索引函数:del_index
+    table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3
+    index_name:string         索引名称
+'''
+def del_index(table, index_name):
+    # 索引为table
+    table = table - 1
+    # 表名
+    tb_Name = var.table_Name[table]
+    # 连接数据库
+    conn = var.pymysql_connect()
+    # 使用cursor()方法创建光标
+    cur = conn.cursor()
+    # sql语句
+    sql = "ALTER TABLE " + tb_Name + " ADD INDEX " + index_name
+    try:
+        # 执行sql语句并commit
+        cur.execute(sql)
+        conn.commit()
+        print("索引" + index_name + "删除成功")
+    except Exception as err:
+        # 出错时回滚（Rollback in case there is any error）
+        print("索引" + index_name + "删除时出错 {}".format(str(err)))
+        conn.rollback()
+    # 断开连接
+    conn.close()
+
+'''
+    获取索引函数:select_index
+    table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3
+'''
+def select_index(table):
+    # 建立连接
+    engine = create_engine(var.engine_creation)
+    # 索引为table
+    table = table - 1
+    # 表名
+    tb_Name = var.table_Name[table]
+    # print(tb_Name)
+    # sql语句
+    sql = "with temp as(SELECT *,length(stat_description) as len FROM mysql.innodb_index_stats a\n" \
+          "WHERE a.database_name = 'ltedb' and a.table_name = '"\
+          + tb_Name +\
+          "' and stat_name like 'n_diff_pfx%%')\n" \
+          "select temp.table_name,temp.index_name,temp.stat_description\n" \
+          "from temp, (select database_name,table_name,index_name,stat_description,max(len) as maxlen\n" \
+          "from temp group by database_name,table_name,index_name) as t\n" \
+          "where temp.database_name = t.database_name and temp.table_name = t.table_name\n" \
+          "and temp.index_name = t.index_name and temp.len = t.maxlen;"
+    # sql = "with temp as(SELECT *,length(stat_description) as len FROM mysql.innodb_index_stats a\n" \
+    #       "WHERE a.database_name = 'ltedb' and a.table_name = 'tbcell'"\
+    #       " and stat_name like 'n_diff_pfx%%')\n" \
+    #       "select temp.table_name,temp.index_name,temp.stat_description\n" \
+    #       "from temp, (select database_name,table_name,index_name,stat_description,max(len) as maxlen\n" \
+    #       "from temp group by database_name,table_name,index_name) as t\n" \
+    #       "where temp.database_name = t.database_name and temp.table_name = t.table_name\n" \
+    #       "and temp.index_name = t.index_name and temp.len = t.maxlen;"
+    # print(sql)
+    # sql查询
+    try:
+        dfData = pd.read_sql_query(sql, engine)
+        # print(dfData)
+    except Exception as err:
+        print("{}".format(str(err)))
+    finally:
+        return dfData.values.tolist()
 
 '''
     建表函数:table_create
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
-
-
 def table_create(table):
     # 若为建tbPRB，则需要同时建表tbPRBNEW
     if table == 3:
@@ -65,8 +159,6 @@ def table_create(table):
     建触发器函数:trigger_create
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
-
-
 def trigger_create(table):
     # 若为表tbPRB建触发器，则需要同时为tbPRBNEW建触发器
     if table == 3:
@@ -118,8 +210,6 @@ fo.close()
 # 数据清洗
 df.drop(index=list(ef.index), inplace=True)
 '''
-
-
 def data_bulkinsert(table, df):
     # 索引为table
     table = table - 1
@@ -165,7 +255,6 @@ def data_bulkinsert(table, df):
             print("若为建tbPRB，则需要同时建表tbPRBNEW")
             data_bulkinsert_prbnew()
 
-
 def data_bulkinsert_prbnew():
     change_database_sqlmode()
     # table为5，索引为4
@@ -194,13 +283,12 @@ def data_bulkinsert_prbnew():
         conn.close()
 
 
+
 '''
     数据导出函数:data_export
     table:int           数据表，取值1-5分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW;
     type:string         文件格式，取指为"xlsx"或"csv"
 '''
-
-
 def data_export(table, type):
     # 索引为table
     table = table - 1
@@ -235,16 +323,23 @@ def data_export(table, type):
         print("输出时选择了错误的类型")
 
 
-# for i in range(1, 8):
-#     table_create(i)
-#     trigger_create(i)
-# filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
-# df = pd.read_excel(filePath, sheet_name=0)
-# filePath = '9. tbMROData.csv'
-# df = pd.read_csv(filePath)
-# data_bulkinsert(4, df)
-# data_bulkinsert_prbnew()
-# table_create(8)
-# trigger_create(8)
-table_create(9)
-# trigger_create(9)
+if __name__ == '__main__':
+    # for i in range(1, 10):
+    #     table_create(i)
+    #     trigger_create(i)
+    # filePath = '12. tbCellKPI-优化区17日-19日KPI指标统计表-0717至0719.xlsx'
+    # df = pd.read_excel(filePath, sheet_name=0)
+    # filePath = '9. tbMROData.csv'
+    # df = pd.read_csv(filePath)
+    # data_bulkinsert(4, df)
+    # data_bulkinsert_prbnew()
+    # table_create(1)
+    # trigger_create(1)
+    # table_create(9)
+    # trigger_create(9)
+    # filePath = '1.tbCell.xlsx'
+    # df = pd.read_excel(filePath, sheet_name=0)
+    # data_bulkinsert(1, df)
+    # add_index(1, "SECTOR_ID,SECTOR_NAME,ENODEBID", "tbcell_index")
+    #add_index(1, "SECTOR_NAME", "SECTOR_NAME")
+    print(select_index(1))

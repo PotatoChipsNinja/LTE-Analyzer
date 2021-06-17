@@ -10,13 +10,11 @@ from collections import defaultdict
 # 从tbc2inew中选取符合要求的ServingSector, InterferingSector
 def select_triplet_from_tbc2inew(xValue):
     engine = create_engine(var.engine_creation)
-    sql = "select ServingSector, InterferingSector from tbc2inew where PrbABS6 >= " + str(
-        xValue)
+    sql = "select ServingSector, InterferingSector from tbc2inew where PrbABS6 >= " + str(xValue)
     dfData = pd.read_sql_query(sql, engine)
 
     dict_sectors = defaultdict(set)
-    for i, j in zip(dfData['ServingSector'].tolist(),
-                    dfData['InterferingSector'].tolist()):
+    for i, j in zip(dfData['ServingSector'].tolist(), dfData['InterferingSector'].tolist()):
         dict_sectors[i].add(j)
         dict_sectors[j].add(i)
 
@@ -28,14 +26,21 @@ def select_triplet_from_tbc2inew(xValue):
                 set_allTriplet.add(tuple(sorted([i, j, k])))
         set_temp.add(i)
 
-    dfData = DataFrame(list(set_allTriplet),
-                       columns={
-                           0: 'a小区ID',
-                           1: 'b小区ID',
-                           2: 'c小区ID'
-                       })
+    dfData = DataFrame(list(set_allTriplet))
+    dfData = dfData.rename(columns={0: 'SectorA', 1: 'SectorB', 2: 'SectorC'})
     return dfData
 
 
+# 选取tbC2INEW中所有数据，供前端展示
+def select_all_from_tbC2i3():
+    engine = create_engine(var.engine_creation)
+    sql = "select * from tbC2i3"
+    dfData = pd.read_sql_query(sql, engine)
+    return dfData
+
+
+tb.table_create(9)
+tb.trigger_create(9)
 a = select_triplet_from_tbc2inew(0.002)
 print(a)
+tb.data_bulkinsert(9, a)
