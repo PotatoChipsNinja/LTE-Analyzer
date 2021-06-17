@@ -6,6 +6,7 @@ import time
 from src.db import var
 import os
 
+
 def change_database_sqlmode():
     # 初始化数据库连接，使用pymysql模块
     # MySQL的用户：root, 密码:123456, 端口：3306,数据库：ltedb
@@ -28,6 +29,8 @@ def change_database_sqlmode():
     index_string:string     索引包含列
     name:string         索引名称
 '''
+
+
 def add_index(table, index_string, index_name):
     # 索引为table
     table = table - 1
@@ -39,6 +42,7 @@ def add_index(table, index_string, index_name):
     cur = conn.cursor()
     # sql语句
     sql = "ALTER TABLE " + tb_Name + " ADD INDEX " + index_name + "(" + index_string + ")"
+    flag = True
     try:
         # 执行sql语句并commit
         cur.execute(sql)
@@ -48,14 +52,19 @@ def add_index(table, index_string, index_name):
         # 出错时回滚（Rollback in case there is any error）
         print("索引" + index_name + "建立时出错 {}".format(str(err)))
         conn.rollback()
+        flag = False
     # 断开连接
     conn.close()
+    return flag
+
 
 '''
     动态删除索引函数:del_index
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3
     index_name:string         索引名称
 '''
+
+
 def del_index(table, index_name):
     # 索引为table
     table = table - 1
@@ -66,7 +75,8 @@ def del_index(table, index_name):
     # 使用cursor()方法创建光标
     cur = conn.cursor()
     # sql语句
-    sql = "ALTER TABLE " + tb_Name + " ADD INDEX " + index_name
+    sql = "ALTER TABLE " + tb_Name + " DROP INDEX " + index_name
+    flag = True
     try:
         # 执行sql语句并commit
         cur.execute(sql)
@@ -76,13 +86,18 @@ def del_index(table, index_name):
         # 出错时回滚（Rollback in case there is any error）
         print("索引" + index_name + "删除时出错 {}".format(str(err)))
         conn.rollback()
+        flag = False
     # 断开连接
     conn.close()
+    return flag
+
 
 '''
     获取索引函数:select_index
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3
 '''
+
+
 def select_index(table):
     # 建立连接
     engine = create_engine(var.engine_creation)
@@ -119,10 +134,13 @@ def select_index(table):
     finally:
         return dfData.values.tolist()
 
+
 '''
     建表函数:table_create
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
+
+
 def table_create(table):
     # # 若为建tbPRB，则需要同时建表tbPRBNEW
     # if table == 3:
@@ -159,6 +177,8 @@ def table_create(table):
     建触发器函数:trigger_create
     table:int   数据表，取值1-9分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW、tbAdminUSER、tbOrdUSER、tbC2INEW、tbC2I3;
 '''
+
+
 def trigger_create(table):
     # 若为表tbPRB建触发器，则需要同时为tbPRBNEW建触发器
     # if table == 3:
@@ -210,6 +230,8 @@ fo.close()
 # 数据清洗
 df.drop(index=list(ef.index), inplace=True)
 '''
+
+
 def data_bulkinsert(table, df):
     # 索引为table
     table = table - 1
@@ -229,6 +251,8 @@ def data_bulkinsert(table, df):
 
     if table == 7:
         table = 5
+    elif table == 8:
+        table = 6
 
     # sql语句
     sql_ins = var.sql_insert[table]
@@ -254,6 +278,7 @@ def data_bulkinsert(table, df):
         if table == 2:
             print("若向tbPRB插入数据，则需要同时生成tbPRBNEW中的数据")
             data_bulkinsert_prbnew()
+
 
 def data_bulkinsert_prbnew():
     change_database_sqlmode()
@@ -283,12 +308,13 @@ def data_bulkinsert_prbnew():
         conn.close()
 
 
-
 '''
     数据导出函数:data_export
     table:int           数据表，取值1-5分别表示 tbCell、tbKPI、tbPRB、tbMRO、tbPRBNEW;
     type:string         文件格式，取指为"xlsx"或"csv"
 '''
+
+
 def data_export(table, type):
     # 索引为table
     table = table - 1
