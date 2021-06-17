@@ -7,6 +7,7 @@ const routes = [
   { path: '/admin/user', component: Vue.component('user') },
   { path: '/admin/db-info', component: Vue.component('db-info') },
   { path: '/admin/db-setting', component: Vue.component('db-setting') },
+  { path: '/admin/db-index', component: Vue.component('db-index') },
   { path: '/data/import', component: Vue.component('import') },
   { path: '/data/export', component: Vue.component('export') },
   { path: '/query/sector', component: Vue.component('sector') },
