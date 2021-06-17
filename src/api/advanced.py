@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from src.db import db36
 from src.db import db37
+from lib.draw import draw
 
 advanced = Blueprint("advanced", __name__)
 
@@ -33,4 +34,7 @@ def c2i3():
 
 @advanced.route("/api/advanced/louvain", methods=["GET"])
 def louvain():
-    x = request.args.get("x")
+    x = float(request.args.get("x"))
+    return {
+        "img": draw.get_base64(x)
+    }

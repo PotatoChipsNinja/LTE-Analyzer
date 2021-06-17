@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pylouvain import PyLouvain
+from lib.draw.pylouvain import PyLouvain
 import math
 from matplotlib import pyplot as plt
 import networkx as nx
