@@ -4,14 +4,14 @@ import pymysql
 def pymysql_connect():
     con = pymysql.connect(host='localhost',
                           user='root',
-                          passwd='zhangjie1212@@',
+                          passwd='123456',
                           db='ltedb',
                           port=3306,
                           charset='utf8')
     return con
 
 
-engine_creation = 'mysql+pymysql://root:zhangjie1212@@@localhost:3306/ltedb'
+engine_creation = 'mysql+pymysql://root:123456@localhost:3306/ltedb'
 table_Name = [
     "tbcell", "tbKPI", "tbPRB", "tbMRO", "tbPRBNEW", "tbAdminUSER", "tbOrdUSER", "tbC2INEW", "tbC2I3"
 ]
@@ -578,7 +578,7 @@ sql_trigger = [
         before insert on tbC2I3_tmp for each row
         begin
             if not exists(select tbC2I3.SectorA,tbC2I3.SectorB,tbC2I3.SectorC from tbC2I3 
-                          where tbC2I3.SectorA=NEW.tbC2I3.SectorA and tbC2I3.SectorB=NEW.tbC2I3.SectorB and tbC2I3.SectorC=NEW.tbC2I3.SectorC) then
+                          where tbC2I3.SectorA=NEW.SectorA and tbC2I3.SectorB=NEW.SectorB and tbC2I3.SectorC=NEW.SectorC) then
                insert into tbC2I3(SectorA,SectorB,SectorC)
                values(NEW.SectorA,NEW.SectorB,NEW.SectorC);
             end if;
@@ -660,7 +660,12 @@ sql_insert = [
         """
         insert into tbC2INEW_tmp(ServingSector,InterferingSector,mean,std,PrbC2I9,PrbABS6)
          values(%s,%s,%s,%s,%s,%s)
+        """,
         """
+        insert into tbC2I3_tmp(SectorA,SectorB,SectorC)
+         values(%s,%s,%s)
+        """
+        
 ]
 
 

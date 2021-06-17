@@ -31,6 +31,9 @@ def select_SSectorandISectorInfo_from_tbmro(num):
 
 # 选取tbC2INEW中所有数据，供前端展示
 def select_all_from_tbC2inew():
+    tb.table_create(8)
+    tb.trigger_create(8)
+    tb.data_bulkinsert(8, select_SSectorandISectorInfo_from_tbmro(500))
     engine = create_engine(var.engine_creation)
     sql = "select * from tbc2inew"
     dfData = pd.read_sql_query(sql, engine)
@@ -40,7 +43,7 @@ def select_all_from_tbC2inew():
 # tb.table_create(8)
 # tb.trigger_create(8)
 if __name__ == "__main__":
-    a = select_SSectorandISectorInfo_from_tbmro(000)
+    a = select_SSectorandISectorInfo_from_tbmro(500)
     print(a)
     tb.data_bulkinsert(8, a)
 

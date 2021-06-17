@@ -50,7 +50,7 @@ def import_file(ws):
         df = pd.read_csv(file_path)
     elif request.args.get("type") == "xlsx":
         df = pd.read_excel(file_path)
-    block_size = 50
+    block_size = 1000000
     data_len = df.shape[0]
     for i in range(math.ceil(data_len / block_size)):
         block = df.iloc[i * block_size:min((i + 1) * block_size, data_len)]

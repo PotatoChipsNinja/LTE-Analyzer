@@ -32,7 +32,10 @@ def select_triplet_from_tbc2inew(xValue):
 
 
 # 选取tbC2INEW中所有数据，供前端展示
-def select_all_from_tbC2i3():
+def select_all_from_tbC2i3(x):
+    tb.table_create(9)
+    tb.trigger_create(9)
+    tb.data_bulkinsert(9, select_triplet_from_tbc2inew(x))
     engine = create_engine(var.engine_creation)
     sql = "select * from tbC2i3"
     dfData = pd.read_sql_query(sql, engine)

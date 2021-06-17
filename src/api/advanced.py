@@ -8,14 +8,31 @@ advanced = Blueprint("advanced", __name__)
 
 @advanced.route("/api/advanced/c2i", methods=["GET"])
 def c2i():
-    ret = db36.select_all_from_tbC2inew()
-    print(ret)
+    tmp = db36.select_all_from_tbC2inew()
+    ret = []
+    for _, row in tmp.iterrows():
+        ret.append({
+            "servingSector": row["ServingSector"],
+            "interfereringSector": row["InterferingSector"],
+            "mean": row["mean"],
+            "std": row["std"],
+            "diff9": row["PrbC2I9"],
+            "abs6": row["PrbABS6"]
+        })
     return {
-        "result": db36.select_all_from_tbC2inew()
+        "result": ret
     }
 
 
 @advanced.route("/api/advanced/c2i3", methods=["GET"])
 def c2i3():
     x = request.args.get("x")
-    return getc23i(x)
+    tmp = db37.select_all_from_tbC2i3(x)
+    ret = []
+    for _, row in tmp.iterrows():
+        ret.append([row["SectorA"], row["SectorB"], row["SectorC"]])
+    return {
+        "result": ret
+    }
+
+

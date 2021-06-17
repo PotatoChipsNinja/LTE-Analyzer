@@ -229,6 +229,8 @@ def data_bulkinsert(table, df):
 
     if table == 7:
         table = 5
+    elif table == 8:
+        table = 6
 
     # sql语句
     sql_ins = var.sql_insert[table]
