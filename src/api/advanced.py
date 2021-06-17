@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from src.db import db36
 from src.db import db37
 
-
 advanced = Blueprint("advanced", __name__)
 
 
@@ -19,9 +18,7 @@ def c2i():
             "diff9": row["PrbC2I9"],
             "abs6": row["PrbABS6"]
         })
-    return {
-        "result": ret
-    }
+    return {"result": ret}
 
 
 @advanced.route("/api/advanced/c2i3", methods=["GET"])
@@ -31,8 +28,9 @@ def c2i3():
     ret = []
     for _, row in tmp.iterrows():
         ret.append([row["SectorA"], row["SectorB"], row["SectorC"]])
-    return {
-        "result": ret
-    }
+    return {"result": ret}
 
 
+@advanced.route("/api/advanced/louvain", methods=["GET"])
+def louvain():
+    x = request.args.get("x")
