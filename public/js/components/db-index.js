@@ -20,14 +20,14 @@ Vue.component('db-index', {
           label: 'tbPRB'
         },
         {
-          value: 'tbmro',
-          label: 'tbMRO'
+          value: 'tbkpi',
+          label: 'tbKPI'
         }
       ],
       keys: {
         'tbcell': ['CITY', 'SECTOR_ID', 'SECTOR_NAME', 'ENODEBID', 'ENODEB_NAME', 'EARFCN', 'PCI', 'PSS', 'SSS', 'TAC', 'VENDOR', 'LONGITUDE', 'LATITUDE', 'STYLE', 'AZIMUTH', 'HEIGHT', 'ELECTTILT', 'MECHTILT', 'TOTLETILT'],
         'tbprb': ['起始时间', '网元或基站名称', '小区描述', '小区名称'],
-        'tbmro': ['TimeStamp', 'ServingSector', 'InterferingSector', 'LteScRSRP', 'LteNcRSRP', 'LteNcEarfcn', 'LteNcPci']
+        'tbkpi': ['起始时间', '网元或基站名称', '小区', '小区名称', 'RRC连接建立完成次数', 'RRC连接请求次数', 'RRC建立成功率qf', 'E_RAB建立成功总次数', 'E_RAB建立尝试总次数', 'E_RAB建立成功率2', 'eNodeB触发的E_RAB异常释放总次数', '小区切换出E_RAB异常释放总次数', 'E_RAB掉线率', '无线接通率ay']
       }
     }
   },
