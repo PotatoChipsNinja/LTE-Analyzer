@@ -205,7 +205,6 @@ sql_create = [
             PRIMARY KEY(TimeStamp,ServingSector,InterferingSector,LteScRSRP,LteNcRSRP)
             -- FOREIGN KEY(ServingSector) REFERENCES tbcell(SECTOR_ID),
             -- FOREIGN KEY(InterferingSector) REFERENCES tbcell(SECTOR_ID) 
-            -- INDEX(LteScRSRP,LteNcRSRP)
         ) PARTITION BY KEY(ServingSector,InterferingSector) PARTITIONS 5;      
         """, """
         (   
